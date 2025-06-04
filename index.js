@@ -12,14 +12,18 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Apply method not allowed middleware first
+app.use(methodNotAllowedHandler);
+
 // Sample route for testing
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the mock CoinGecko API' });
 });
 
-// Add error handling middleware
-app.use(methodNotAllowedHandler);
+// Add 404 not found middleware
 app.use(notFoundHandler);
+
+// Global error handler
 app.use(globalErrorHandler);
 
 // Conditional server startup for non-test environments
