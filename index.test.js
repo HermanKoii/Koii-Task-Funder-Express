@@ -42,24 +42,18 @@ jest.mock('axios', () => {
 });
 
 // Import the app after mocking dependencies
-const app = require('./index');
+const createApp = require('./index');
 
 describe('Task Funding Service', () => {
-  let server;
+  let app;
 
   beforeAll(() => {
     // Set up environment variables for testing
     process.env.SIGNING_SECRET = 'test_secret';
     process.env.funder_keypair = JSON.stringify([1,2,3,4]); // Mock keypair
-  });
-
-  beforeEach(() => {
-    server = app.listen(0); // Use a random available port
-  });
-
-  afterEach(() => {
-    server.close();
-    jest.clearAllMocks();
+    
+    // Create the app
+    app = createApp;
   });
 
   function createSlackSignature(body, secret, timestamp) {
@@ -72,7 +66,7 @@ describe('Task Funding Service', () => {
     const body = 'text=fund+task123+100&user_id=U06NM9A2VC1&response_url=http://example.com';
     const timestamp = Math.floor(Date.now() / 1000);
     
-    const response = await request(server)
+    const response = await request(app)
       .post('/fundtask')
       .set('x-slack-signature', 'invalid_signature')
       .set('x-slack-request-timestamp', timestamp)
@@ -88,7 +82,7 @@ describe('Task Funding Service', () => {
     
     const signature = createSlackSignature(body, process.env.SIGNING_SECRET, timestamp);
     
-    const response = await request(server)
+    const response = await request(app)
       .post('/fundtask')
       .set('x-slack-signature', signature)
       .set('x-slack-request-timestamp', timestamp)
@@ -103,7 +97,7 @@ describe('Task Funding Service', () => {
     
     const signature = createSlackSignature(body, process.env.SIGNING_SECRET, timestamp);
     
-    const response = await request(server)
+    const response = await request(app)
       .post('/fundtask')
       .set('x-slack-signature', signature)
       .set('x-slack-request-timestamp', timestamp)
@@ -119,7 +113,7 @@ describe('Task Funding Service', () => {
     
     const signature = createSlackSignature(body, process.env.SIGNING_SECRET, timestamp);
     
-    const response = await request(server)
+    const response = await request(app)
       .post('/fundtask')
       .set('x-slack-signature', signature)
       .set('x-slack-request-timestamp', timestamp)
