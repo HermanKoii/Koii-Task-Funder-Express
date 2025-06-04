@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, jest } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
 import { ApiError, errorHandler, createError } from '../src/middleware/errorHandler';
 
@@ -10,10 +10,10 @@ describe('Error Handling Middleware', () => {
   beforeEach(() => {
     mockRequest = {};
     mockResponse = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn()
     };
-    mockNext = jest.fn();
+    mockNext = vi.fn();
   });
 
   describe('ApiError', () => {
