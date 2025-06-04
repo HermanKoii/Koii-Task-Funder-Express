@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "mock-coingecko-api",
   "version": "1.0.0",
   "description": "Mock CoinGecko API Service",
@@ -13,4 +14,20 @@
   "devDependencies": {
     "vitest": "^0.32.0"
   }
+=======
+  "name": "coingecko-mock-api",
+  "version": "1.0.0",
+  "description": "A mock implementation of the CoinGecko API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": ["mock", "api", "cryptocurrency", "coingecko"],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+>>>>>>> pr-3-HermanKoii-Koii-Task-Funder-Express
 }
