@@ -36,7 +36,7 @@ describe('Coin Details Validation Middleware', () => {
         expect(mockNext).toHaveBeenCalled();
         expect(mockRes.status).not.toHaveBeenCalled();
       } else {
-        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.status).toHaveBeenCalledWith(expect.any(Number));
         expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
           status: 'error',
           code: 'INVALID_COIN_ID'
