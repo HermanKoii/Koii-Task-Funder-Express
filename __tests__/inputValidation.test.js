@@ -1,5 +1,6 @@
-const { validateCoinList, validateCoinPrices, validateCoinDetails } = require('../src/middleware/inputValidation');
-const { validationResult } = require('express-validator');
+import { describe, it, expect, beforeEach, jest } from 'vitest';
+import { validateCoinList, validateCoinPrices, validateCoinDetails } from '../src/middleware/inputValidation';
+import { validationResult } from 'express-validator';
 
 describe('Input Validation Middleware', () => {
   const mockReq = (query = {}, params = {}) => ({
