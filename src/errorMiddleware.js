@@ -27,7 +27,7 @@ export const errorHandler = (err, req, res, next) => {
   const errorResponse = {
     status: statusCode >= 500 ? 'error' : 'fail',
     statusCode,
-    message: err.message || 'Internal Server Error',
+    message: statusCode === 500 ? 'Internal Server Error' : err.message,
     ...(err.details && { details: err.details })
   };
 
