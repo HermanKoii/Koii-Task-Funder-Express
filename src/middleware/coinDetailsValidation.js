@@ -8,6 +8,9 @@ const Joi = require('joi');
  * @returns {Object|void} Validation error response or continue to next middleware
  */
 const validateCoinDetails = (req, res, next) => {
+  // Convert coinId to lowercase to normalize
+  req.params.coinId = req.params.coinId ? req.params.coinId.toLowerCase() : '';
+
   // Define validation schema
   const schema = Joi.object({
     coinId: Joi.string()
