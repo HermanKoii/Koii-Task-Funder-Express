@@ -88,8 +88,7 @@ describe('Task Funding Service', () => {
       .set('x-slack-request-timestamp', timestamp)
       .send(body);
     
-    expect(response.statusCode).toBe(200);
-    // Additional assertions can be added to check response content
+    expect(response.statusCode).toBe(403);
   }, 10000);
 
   it('should successfully fund a task for authorized user', async () => {
@@ -105,7 +104,7 @@ describe('Task Funding Service', () => {
       .send(body);
     
     expect(response.statusCode).toBe(200);
-    // Add more specific assertions based on the expected behavior
+    expect(response.text).toBe('Task funded successfully');
   }, 10000);
 
   it('should handle invalid request body gracefully', async () => {
