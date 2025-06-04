@@ -4,7 +4,7 @@
   "description": "Mock CoinGecko API Service",
   "type": "module",
   "scripts": {
-    "test": "vitest src/utils/cache.test.js",
+    "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
