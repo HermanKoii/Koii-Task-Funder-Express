@@ -1,5 +1,5 @@
 /**
- * Centralized error handling middleware for the CoinGecko mock API
+ * Centralized error handling middleware for mock API
  * @module errorHandler
  */
 
@@ -7,10 +7,8 @@
  * Handle 404 Not Found errors for non-existent routes
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
- * @param {import('express').NextFunction} next - Express next middleware function
  */
-const notFoundHandler = (req, res, next) => {
-  const error = new Error(`Route Not Found: ${req.originalUrl}`);
+export const notFoundHandler = (req, res) => {
   res.status(404).json({
     status: 'error',
     message: 'Endpoint not found',
@@ -25,16 +23,15 @@ const notFoundHandler = (req, res, next) => {
  * Handle method not allowed errors for unsupported HTTP methods
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
- * @param {import('express').NextFunction} next - Express next middleware function
  */
-const methodNotAllowedHandler = (req, res, next) => {
+export const methodNotAllowedHandler = (req, res) => {
   res.status(405).json({
     status: 'error',
     message: 'Method Not Allowed',
     details: {
       method: req.method,
       path: req.originalUrl,
-      supportedMethods: ['GET', 'POST'] // Update with actual supported methods
+      supportedMethods: ['GET'] // Update with actual supported methods
     }
   });
 };
@@ -46,17 +43,11 @@ const methodNotAllowedHandler = (req, res, next) => {
  * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} next - Express next middleware function
  */
-const globalErrorHandler = (err, req, res, next) => {
+export const globalErrorHandler = (err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     status: 'error',
     message: 'Internal Server Error',
     details: process.env.NODE_ENV === 'development' ? err.message : {}
   });
-};
-
-export { 
-  notFoundHandler, 
-  methodNotAllowedHandler, 
-  globalErrorHandler 
 };
