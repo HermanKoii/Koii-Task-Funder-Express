@@ -1,7 +1,7 @@
 const request = require('supertest');
 const express = require('express');
-const { coinDetails } = require('../src/routes');
-const { coinDetailsValidation } = require('../src/middleware');
+const coinDetails = require('../src/routes/coinDetails');
+const validateCoinDetails = require('../src/middleware/coinDetailsValidation');
 
 const app = express();
 app.use(express.json());
