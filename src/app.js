@@ -7,14 +7,16 @@ import {
 
 const app = express();
 
-// Apply any existing routes here
-// For example: app.use('/coins', coinRoutes);
+// Basic route to ensure Express is working
+app.get('/', (req, res) => {
+  res.json({ message: 'Mock CoinGecko API is running' });
+});
 
-// Method Not Allowed handler for all routes
-app.all('*', methodNotAllowedHandler);
-
-// 404 Not Found handler
+// 404 Not Found handler (needs to be last)
 app.use(notFoundHandler);
+
+// Method Not Allowed handler 
+app.use(methodNotAllowedHandler);
 
 // Global error handler
 app.use(errorHandler);
