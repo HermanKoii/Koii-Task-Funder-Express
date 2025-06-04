@@ -2,35 +2,48 @@ const express = require('express');
 const request = require('supertest');
 const crypto = require('crypto');
 
-// Mock the external dependencies
+// Enhanced mocking
 jest.mock('@_koii/create-task-cli', () => ({
-  FundTask: jest.fn(),
-  KPLEstablishConnection: jest.fn(),
-  KPLFundTask: jest.fn(),
+  FundTask: jest.fn().mockResolvedValue(true),
+  KPLEstablishConnection: jest.fn().mockResolvedValue(true),
+  KPLFundTask: jest.fn().mockResolvedValue(true),
   getTaskStateInfo: jest.fn().mockResolvedValue({
     stake_pot_account: 'mockStakePotAccount',
     token_type: null
   }),
-  establishConnection: jest.fn(),
-  checkProgram: jest.fn(),
-  KPLCheckProgram: jest.fn()
+  establishConnection: jest.fn().mockResolvedValue(true),
+  checkProgram: jest.fn().mockResolvedValue(true),
+  KPLCheckProgram: jest.fn().mockResolvedValue(true)
+}));
+
+jest.mock('@_koii/web3.js', () => ({
+  PublicKey: jest.fn().mockImplementation((key) => ({
+    toString: () => key
+  })),
+  Connection: jest.fn().mockImplementation(() => ({
+    // Mock connection methods if needed
+  })),
+  Keypair: {
+    fromSecretKey: jest.fn().mockReturnValue({
+      publicKey: 'mockPublicKey',
+      secretKey: new Uint8Array([1,2,3,4])
+    })
+  }
 }));
 
 jest.mock('axios', () => ({
   post: jest.fn().mockResolvedValue({})
 }));
 
+// Setup environment variables
+process.env.SIGNING_SECRET = 'test_secret';
+process.env.funder_keypair = JSON.stringify([1,2,3,4]); // Mock keypair
+
 // Import the app after mocking dependencies
 const app = require('./index');
 
 describe('Task Funding Service', () => {
   let server;
-
-  beforeAll(() => {
-    // Set up environment variables for testing
-    process.env.SIGNING_SECRET = 'test_secret';
-    process.env.funder_keypair = JSON.stringify([1,2,3,4]); // Mock keypair
-  });
 
   beforeEach(() => {
     server = app.listen(0); // Use a random available port
