@@ -1,7 +1,10 @@
 const request = require('supertest');
 const express = require('express');
-const coinDetails = require('../src/routes/coinDetails');
-const validateCoinDetails = require('../src/middleware/coinDetailsValidation');
+const path = require('path');
+
+// Use absolute path to ensure correct import
+const coinDetails = require(path.resolve(__dirname, '../src/routes/coinDetails'));
+const validateCoinDetails = require(path.resolve(__dirname, '../src/middleware/coinDetailsValidation'));
 
 const app = express();
 app.use(express.json());
