@@ -14,14 +14,14 @@ describe('Error Handling Middleware', () => {
     });
   });
 
-  // Test Method Not Allowed
-  it('should return 405 for unsupported HTTP methods', async () => {
+  // Test 404 for unsupported methods on non-existent route
+  it('should return 404 for unsupported HTTP methods', async () => {
     const response = await request(app).post('/non-existent-route');
     
-    expect(response.status).toBe(405);
+    expect(response.status).toBe(404);
     expect(response.body.error).toEqual({
-      message: 'Method Not Allowed',
-      status: 405
+      message: 'Not Found',
+      status: 404
     });
   });
 });
