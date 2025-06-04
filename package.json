@@ -8,14 +8,18 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "keywords": ["mock", "api", "cryptocurrency"],
+  "keywords": [
+    "mock",
+    "api",
+    "cryptocurrency"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.21.2"
   },
   "devDependencies": {
-    "vitest": "^0.34.6",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.4",
+    "vitest": "^0.34.6"
   }
 }
