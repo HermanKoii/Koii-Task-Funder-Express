@@ -77,7 +77,7 @@ function getCoinDetails(req, res, next) {
   try {
     const coinId = req.params.coinId;
     
-    // Check if coinId is undefined or empty
+    // Explicitly handle route with no parameter
     if (!coinId) {
       throw new Error('Coin ID is required');
     }
@@ -110,6 +110,12 @@ function getCoinDetails(req, res, next) {
 }
 
 const coinDetailsRouter = express.Router();
+
+// Catch routes with and without parameters
+coinDetailsRouter.get('/', (req, res, next) => {
+  const error = new Error('Coin ID is required');
+  next(error);
+});
 coinDetailsRouter.get('/:coinId', getCoinDetails);
 coinDetailsRouter.use(coinDetailsErrorHandler);
 
