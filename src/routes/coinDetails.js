@@ -1,116 +1,44 @@
 import express from 'express';
-import NodeCache from 'node-cache';
-
-// Mock coin data (in a real app, this would come from a database or service)
-const mockCoins = {
-  'bitcoin': {
-    id: 'bitcoin',
-    symbol: 'btc',
-    name: 'Bitcoin',
-    description: 'The first decentralized cryptocurrency',
-    price: 50000
-  },
-  'ethereum': {
-    id: 'ethereum',
-    symbol: 'eth',
-    name: 'Ethereum',
-    description: 'Blockchain platform with smart contract functionality',
-    price: 3000
-  }
-};
-
-// Create a cache instance
-const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
+import coinDetails from '../data/coinDetails.js';
 
 /**
- * Validate coin ID input
- * @param {string} coinId - The ID of the coin to validate
- * @throws {Error} If coin ID is invalid
+ * Router for cryptocurrency details endpoints
+ * @module coinDetailsRouter
  */
-function validateCoinId(coinId) {
-  if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
-    throw new Error('Coin ID is required');
-  }
-}
+const router = express.Router();
 
 /**
- * Error handler middleware for coin details route
- * @param {Error} err - The error object
- * @param {express.Request} req - Express request object
- * @param {express.Response} res - Express response object
- * @param {express.NextFunction} next - Express next middleware function
+ * Get detailed information for a specific cryptocurrency
+ * @route GET /coins/:id
+ * @param {string} id - Cryptocurrency ID
+ * @returns {Object} Cryptocurrency details
  */
-function coinDetailsErrorHandler(err, req, res, next) {
-  console.error(`Coin Details Error: ${err.message}`);
-  
-  switch (err.message) {
-    case 'Coin ID is required':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Coin ID is required',
-        status: 404
-      });
-    
-    case 'Coin not found':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Cryptocurrency not found',
-        status: 404
-      });
-    
-    default:
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred',
-        status: 500
-      });
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  // Validate input
+  if (!id) {
+    return res.status(400).json({
+      error: 'Coin ID is required',
+      code: 'INVALID_INPUT'
+    });
   }
-}
 
-/**
- * Get coin details by ID
- * @param {express.Request} req - Express request object
- * @param {express.Response} res - Express response object
- * @param {express.NextFunction} next - Express next middleware function
- */
-function getCoinDetails(req, res, next) {
-  try {
-    const coinId = req.params.coinId;
-    
-    // Check if coinId is undefined or empty
-    if (!coinId) {
-      throw new Error('Coin ID is required');
-    }
-    
-    // Validate input
-    validateCoinId(coinId);
-    
-    const normalizedCoinId = coinId.toLowerCase();
-    
-    // Check cache first
-    const cachedCoin = coinCache.get(normalizedCoinId);
-    if (cachedCoin) {
-      return res.json(cachedCoin);
-    }
-    
-    // Find coin in mock data
-    const coin = mockCoins[normalizedCoinId];
-    
-    if (!coin) {
-      throw new Error('Coin not found');
-    }
-    
-    // Cache the result
-    coinCache.set(normalizedCoinId, coin);
-    
-    res.json(coin);
-  } catch (error) {
-    next(error);
+  // Normalize id to lowercase for case-insensitive lookup
+  const normalizedId = id.toLowerCase();
+
+  // Check if coin exists
+  const coinDetail = coinDetails[normalizedId];
+  if (!coinDetail) {
+    return res.status(404).json({
+      error: 'Cryptocurrency not found',
+      code: 'COIN_NOT_FOUND',
+      id: normalizedId
+    });
   }
-}
 
-const coinDetailsRouter = express.Router();
-coinDetailsRouter.get('/:coinId', getCoinDetails);
-coinDetailsRouter.use(coinDetailsErrorHandler);
+  // Return coin details
+  res.json(coinDetail);
+});
 
-export default coinDetailsRouter;
+export default router;
