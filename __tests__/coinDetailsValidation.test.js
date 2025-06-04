@@ -15,13 +15,13 @@ describe('Coin Details Validation Middleware', () => {
   const testCases = [
     // Valid inputs
     { input: 'bitcoin', expectValid: true },
+    { input: 'BITCOIN', expectValid: true }, // This should now pass due to lowercase conversion
     { input: 'ethereum', expectValid: true },
     { input: 'cardano', expectValid: true },
     { input: 'polkadot', expectValid: true },
     
     // Invalid inputs
     { input: '', expectValid: false },
-    { input: 'BITCOIN', expectValid: false },
     { input: 'bitcoin!@#', expectValid: false },
     { input: 'a'.repeat(51), expectValid: false }
   ];
@@ -36,7 +36,7 @@ describe('Coin Details Validation Middleware', () => {
         expect(mockNext).toHaveBeenCalled();
         expect(mockRes.status).not.toHaveBeenCalled();
       } else {
-        expect(mockRes.status).toHaveBeenCalledWith(expect.any(Number));
+        expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
           status: 'error',
           code: 'INVALID_COIN_ID'
