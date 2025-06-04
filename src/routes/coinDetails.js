@@ -6,6 +6,7 @@ const mockCoins = require('../data/mockCoins');
 /**
  * Get coin details by coin ID
  * Uses validation middleware to ensure coin ID is valid
+ * @route GET /coins/:coinId
  */
 router.get('/:coinId', validateCoinDetails, (req, res) => {
   const coinId = req.params.coinId.toLowerCase();
