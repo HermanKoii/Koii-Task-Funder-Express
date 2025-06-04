@@ -1,11 +1,11 @@
 const request = require('supertest');
 const express = require('express');
-const coinDetailsRoute = require('../src/routes/coinDetails');
-const validateCoinDetails = require('../src/middleware/coinDetailsValidation');
+const { coinDetails } = require('../src/routes');
+const { coinDetailsValidation } = require('../src/middleware');
 
 const app = express();
 app.use(express.json());
-app.use('/coins', coinDetailsRoute);
+app.use('/coins', coinDetails);
 
 describe('Coin Details Validation', () => {
   // Test valid coin ID
