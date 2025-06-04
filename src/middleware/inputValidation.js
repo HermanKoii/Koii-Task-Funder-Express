@@ -23,7 +23,7 @@ export const handleValidationErrors = (req, res, next) => {
 /**
  * Validation rules for coin price endpoint
  */
-export const validateCoinPriceParams = [
+export const validateCoinPriceParams = () => [
   query('ids')
     .isString().withMessage('ids must be a string')
     .notEmpty().withMessage('ids cannot be empty')
@@ -40,7 +40,7 @@ export const validateCoinPriceParams = [
 /**
  * Validation rules for coin list endpoint
  */
-export const validateCoinListParams = [
+export const validateCoinListParams = () => [
   query('include_platform')
     .optional()
     .isBoolean().withMessage('include_platform must be a boolean'),
@@ -51,7 +51,7 @@ export const validateCoinListParams = [
 /**
  * Validation rules for coin details endpoint
  */
-export const validateCoinDetailsParams = [
+export const validateCoinDetailsParams = () => [
   param('id')
     .isString().withMessage('Coin ID must be a string')
     .notEmpty().withMessage('Coin ID cannot be empty')
