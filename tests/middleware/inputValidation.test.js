@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } from '../../src/middleware/inputValidation';
+import { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } from '../../src/middleware/inputValidation.js';
 
 // Mock Express request and response
 const createMockReqRes = (query = {}, params = {}) => {
