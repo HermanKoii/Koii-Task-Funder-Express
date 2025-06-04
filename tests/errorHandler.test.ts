@@ -1,5 +1,6 @@
-import { ApiError, errorHandler, createError } from '../src/middleware/errorHandler';
+import { describe, it, expect, beforeEach, jest } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
+import { ApiError, errorHandler, createError } from '../src/middleware/errorHandler';
 
 describe('Error Handling Middleware', () => {
   let mockRequest: Partial<Request>;
