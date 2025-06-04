@@ -1,0 +1,68 @@
+{
+    "bitcoin": {
+        "id": "bitcoin",
+        "symbol": "btc",
+        "name": "Bitcoin",
+        "description": "Bitcoin is the first and most widely recognized cryptocurrency, created in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto.",
+        "market_data": {
+            "current_price": {
+                "usd": 50000.00,
+                "eur": 42000.00,
+                "jpy": 5500000.00
+            },
+            "market_cap": {
+                "usd": 950000000000,
+                "eur": 800000000000,
+                "jpy": 6500000000000
+            },
+            "total_volume": {
+                "usd": 25000000000,
+                "eur": 21000000000,
+                "jpy": 2800000000000
+            }
+        },
+        "links": {
+            "homepage": "https://bitcoin.org",
+            "blockchain_site": ["https://blockchain.info"],
+            "official_forum_url": ["https://bitcointalk.org"]
+        },
+        "image": {
+            "thumb": "https://assets.coingecko.com/coins/images/1/thumb.png",
+            "small": "https://assets.coingecko.com/coins/images/1/small.png",
+            "large": "https://assets.coingecko.com/coins/images/1/large.png"
+        }
+    },
+    "ethereum": {
+        "id": "ethereum", 
+        "symbol": "eth",
+        "name": "Ethereum",
+        "description": "Ethereum is a decentralized, open-source blockchain platform that enables smart contracts and decentralized applications (dApps).",
+        "market_data": {
+            "current_price": {
+                "usd": 3000.00,
+                "eur": 2500.00,
+                "jpy": 330000.00
+            },
+            "market_cap": {
+                "usd": 350000000000,
+                "eur": 300000000000,
+                "jpy": 4000000000000
+            },
+            "total_volume": {
+                "usd": 15000000000,
+                "eur": 12000000000,
+                "jpy": 1700000000000
+            }
+        },
+        "links": {
+            "homepage": "https://ethereum.org",
+            "blockchain_site": ["https://etherscan.io"],
+            "official_forum_url": ["https://ethereum.org/forum"]
+        },
+        "image": {
+            "thumb": "https://assets.coingecko.com/coins/images/279/thumb.png",
+            "small": "https://assets.coingecko.com/coins/images/279/small.png", 
+            "large": "https://assets.coingecko.com/coins/images/279/large.png"
+        }
+    }
+}
