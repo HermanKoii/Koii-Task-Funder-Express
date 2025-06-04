@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, jest } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { validateCoinList, validateCoinPrices, validateCoinDetails } from '../src/middleware/inputValidation';
 import { validationResult } from 'express-validator';
 
@@ -9,14 +9,14 @@ describe('Input Validation Middleware', () => {
   });
 
   const mockRes = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn()
+    status: vi.fn(() => mockRes),
+    json: vi.fn()
   };
 
-  const mockNext = jest.fn();
+  const mockNext = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Coin List Validation', () => {
