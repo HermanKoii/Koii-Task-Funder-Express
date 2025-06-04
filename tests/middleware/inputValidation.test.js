@@ -27,13 +27,13 @@ describe('Input Validation Middleware', () => {
       expect(next).toHaveBeenCalled();
     });
 
-    it('should reject invalid coin price query params', () => {
+    it('should reject invalid coin price query params', async () => {
       const { req, res, next } = createMockReqRes({
         ids: 'bitcoin!@#',
         vs_currencies: ''
       });
 
-      validateCoinPriceParams[0](req, res, () => {
+      await validateCoinPriceParams[0](req, res, () => {
         validateCoinPriceParams[1](req, res, next);
       });
 
@@ -69,12 +69,12 @@ describe('Input Validation Middleware', () => {
       expect(next).toHaveBeenCalled();
     });
 
-    it('should reject invalid coin ID', () => {
+    it('should reject invalid coin ID', async () => {
       const { req, res, next } = createMockReqRes({}, {
         id: 'bitcoin!@#'
       });
 
-      validateCoinDetailsParams[0](req, res, () => {
+      await validateCoinDetailsParams[0](req, res, () => {
         validateCoinDetailsParams[1](req, res, next);
       });
 
