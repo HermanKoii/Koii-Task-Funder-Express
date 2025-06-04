@@ -7,8 +7,10 @@
  * Handle 404 Not Found errors for non-existent routes
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
+ * @param {import('express').NextFunction} next - Express next middleware function
  */
-export const notFoundHandler = (req, res) => {
+export const notFoundHandler = (req, res, next) => {
+  const error = new Error(`Route Not Found: ${req.originalUrl}`);
   res.status(404).json({
     status: 'error',
     message: 'Endpoint not found',
@@ -23,17 +25,21 @@ export const notFoundHandler = (req, res) => {
  * Handle method not allowed errors for unsupported HTTP methods
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
+ * @param {import('express').NextFunction} next - Express next middleware function
  */
-export const methodNotAllowedHandler = (req, res) => {
-  res.status(405).json({
-    status: 'error',
-    message: 'Method Not Allowed',
-    details: {
-      method: req.method,
-      path: req.originalUrl,
-      supportedMethods: ['GET'] // Update with actual supported methods
-    }
-  });
+export const methodNotAllowedHandler = (req, res, next) => {
+  if (req.method !== 'GET') {
+    return res.status(405).json({
+      status: 'error',
+      message: 'Method Not Allowed',
+      details: {
+        method: req.method,
+        path: req.originalUrl,
+        supportedMethods: ['GET']
+      }
+    });
+  }
+  next();
 };
 
 /**
