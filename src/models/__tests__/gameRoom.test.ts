@@ -1,14 +1,24 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { GameRoom, IGameRoom, IPlayer } from '../gameRoom';
 
 describe('GameRoom Model', () => {
-  // Temporary in-memory MongoDB connection
+  let mongoServer: MongoMemoryServer;
+
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+  });
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+
   beforeEach(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', { 
-      useNewUrlParser: true, 
-      useUnifiedTopology: true 
-    });
+    await GameRoom.deleteMany({});
   });
 
   const createTestRoom = (maxPlayers = 4): IGameRoom => {
