@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import request from 'supertest';
-import { app } from '../../src/app'; // Assuming you have an Express app export
+import { app } from '../../src/app';
 import { GameRoom } from '../../src/models/game-room.model';
 import mongoose from 'mongoose';
 
@@ -24,7 +24,7 @@ describe('Game Room Status Update Endpoint', () => {
     roomId = testRoom._id.toString();
   });
 
-  after(async () => {
+  afterAll(async () => {
     // Close mongoose connection after tests
     await mongoose.connection.close();
   });
