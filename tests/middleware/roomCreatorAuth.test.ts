@@ -5,7 +5,7 @@ import { GameRoom } from '../../src/models/GameRoom';
 jest.mock('../../src/models/GameRoom');
 
 describe('Room Creator Authentication Middleware', () => {
-  let mockReq: Partial<Request>;
+  let mockReq: Request;
   let mockRes: Partial<Response>;
   let mockNext: jest.MockedFunction<NextFunction>;
 
@@ -13,7 +13,7 @@ describe('Room Creator Authentication Middleware', () => {
     mockReq = {
       params: { roomId: 'room123' },
       user: { id: 'user123' }
-    };
+    } as Request;
 
     mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -30,7 +30,7 @@ describe('Room Creator Authentication Middleware', () => {
     (GameRoom.findById as jest.Mock).mockResolvedValue(mockRoom);
 
     await verifyRoomCreator(
-      mockReq as Request, 
+      mockReq, 
       mockRes as Response, 
       mockNext
     );
@@ -44,7 +44,7 @@ describe('Room Creator Authentication Middleware', () => {
     (GameRoom.findById as jest.Mock).mockResolvedValue(mockRoom);
 
     await verifyRoomCreator(
-      mockReq as Request, 
+      mockReq, 
       mockRes as Response, 
       mockNext
     );
