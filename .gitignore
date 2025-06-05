@@ -1,8 +1,14 @@
 node_modules/
 dist/
 .env
+<<<<<<< HEAD
 __pycache__/
 *.log
 .DS_Store
 coverage/
 .nyc_output/
+=======
+*.log
+.DS_Store
+coverage/
+>>>>>>> pr-66-HermanKoii-Koii-Task-Funder-Express

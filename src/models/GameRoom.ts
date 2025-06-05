@@ -1,14 +1,18 @@
 import mongoose from 'mongoose';
 
-const gameRoomSchema = new mongoose.Schema({
-  creatorId: { type: String, required: true },
+const GameRoomSchema = new mongoose.Schema({
+  creatorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   status: { 
     type: String, 
     enum: ['pending', 'in_progress', 'completed', 'cancelled'],
     default: 'pending'
   }
+  // Add other necessary fields as needed
 });
 
-const GameRoom = mongoose.model('GameRoom', gameRoomSchema);
+export const GameRoom = mongoose.model('GameRoom', GameRoomSchema);
 
 export default GameRoom;
