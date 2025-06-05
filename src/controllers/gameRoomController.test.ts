@@ -5,7 +5,7 @@ import GameRoom from '../models/GameRoom';
 jest.mock('../models/GameRoom');
 
 describe('updateGameRoomStatus', () => {
-  let mockReq: Partial<Request>;
+  let mockReq: Request;
   let mockRes: Partial<Response>;
   let mockNext: jest.MockedFunction<NextFunction>;
 
@@ -14,7 +14,7 @@ describe('updateGameRoomStatus', () => {
       params: { roomId: 'room123' },
       body: { status: 'in_progress' },
       user: { id: 'user123' }
-    };
+    } as Request;
 
     mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -31,7 +31,7 @@ describe('updateGameRoomStatus', () => {
     (GameRoom.findOneAndUpdate as jest.Mock).mockResolvedValue(mockRoom);
 
     await updateGameRoomStatus(
-      mockReq as Request, 
+      mockReq, 
       mockRes as Response, 
       mockNext
     );
