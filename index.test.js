@@ -1,8 +1,8 @@
-const express = require('express');
-const request = require('supertest');
-const crypto = require('crypto');
-const { describe, it, expect, beforeAll, beforeEach, afterEach } = require('vitest');
-const { vi } = require('vitest');
+import express from 'express';
+import request from 'supertest';
+import crypto from 'crypto';
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import { vi } from 'vitest';
 
 // Mock the external dependencies
 vi.mock('@_koii/create-task-cli', () => {
@@ -42,7 +42,7 @@ vi.mock('axios', () => {
 });
 
 // Import the app after mocking dependencies
-const app = require('./index');
+const app = await import('./index');
 
 describe('Task Funding Service', () => {
   let server;
@@ -54,7 +54,7 @@ describe('Task Funding Service', () => {
   });
 
   beforeEach(() => {
-    server = app.listen(0); // Use a random available port
+    server = app.default.listen(0); // Use a random available port
   });
 
   afterEach(() => {
