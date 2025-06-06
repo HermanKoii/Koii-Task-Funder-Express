@@ -2,6 +2,10 @@ node_modules/
 dist/
 .env
 __pycache__/
+<<<<<<< HEAD
 .vitest-cache/
+=======
+.vitest/
+>>>>>>> pr-5-Vuk7912-Koii-Task-Funder-Express
 coverage/
 *.log
