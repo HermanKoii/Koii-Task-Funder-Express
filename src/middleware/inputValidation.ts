@@ -16,6 +16,7 @@ export function validateCoinPriceParams(
         });
       }
 
+      // Explicitly call next()
       next();
     }
   ];
@@ -26,7 +27,7 @@ export function validateCoinPriceParams(
 export function validateCoinListParams() {
   const validators = [
     (req: Request, res: Response, next: NextFunction) => {
-      // Default pass-through validation
+      // Explicitly call next()
       next();
     }
   ];
@@ -47,6 +48,7 @@ export function validateCoinDetailsParams() {
         });
       }
 
+      // Explicitly call next()
       next();
     }
   ];
