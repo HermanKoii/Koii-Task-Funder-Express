@@ -9,9 +9,9 @@ export function validateCoinListParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { include_platform } = req.query;
       
-      // Dummy validation to ensure next is called
+      // Optional validation for include_platform
       if (include_platform === 'true') {
-        // Hypothetical validation logic
+        // Dummy validation to simulate a check
         req.query.validatedPlatform = 'true';
       }
       
@@ -29,13 +29,18 @@ export function validateCoinPriceParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { ids } = req.query;
 
-      // Validate ids
+      // Validate ids presence and format
       if (!ids || typeof ids !== 'string' || ids.trim().length === 0) {
         return res.status(400).json({
           error: 'Invalid Coin IDs',
           message: 'Coin IDs are required'
         });
       }
+
+      next();
+    },
+    (req: Request, res: Response, next: NextFunction) => {
+      const { ids } = req.query;
 
       // Validate coin ID format using regex
       const coinIdRegex = /^[a-z0-9,-]+$/i;
@@ -73,6 +78,7 @@ export function validateCoinDetailsParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const coinId = req.params.id; // Note the change from coinId to id per test case
 
+      // Basic presence check
       if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
         return res.status(400).json({
           error: 'Invalid Coin ID',
