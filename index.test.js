@@ -31,6 +31,9 @@ vi.mock('@_koii/web3.js', () => ({
 }));
 
 vi.mock('axios', () => ({
+  default: {
+    post: vi.fn().mockResolvedValue({}),
+  },
   post: vi.fn().mockResolvedValue({})
 }));
 
