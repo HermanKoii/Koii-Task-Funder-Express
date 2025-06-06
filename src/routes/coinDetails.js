@@ -1,5 +1,6 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import { Logger } from '../utils/logger'; // Hypothetical centralized logging utility
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -21,6 +22,7 @@ const mockCoins = {
 
 // Create a cache instance
 const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
+const logger = new Logger('CoinDetails'); // Centralized logging
 
 /**
  * Validate coin ID input
@@ -29,6 +31,7 @@ const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
  */
 function validateCoinId(coinId) {
   if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
+    logger.warn(`Invalid coin ID: ${coinId}`);
     throw new Error('Coin ID is required');
   }
 }
@@ -41,30 +44,25 @@ function validateCoinId(coinId) {
  * @param {express.NextFunction} next - Express next middleware function
  */
 function coinDetailsErrorHandler(err, req, res, next) {
-  console.error(`Coin Details Error: ${err.message}`);
+  logger.error(`Coin Details Error: ${err.message}`, {
+    method: req.method,
+    path: req.path,
+    params: req.params
+  });
   
-  switch (err.message) {
-    case 'Coin ID is required':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Coin ID is required',
-        status: 404
-      });
-    
-    case 'Coin not found':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Cryptocurrency not found',
-        status: 404
-      });
-    
-    default:
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred',
-        status: 500
-      });
-  }
+  const errorMap = {
+    'Coin ID is required': { status: 400, message: 'Coin ID is required' },
+    'Coin not found': { status: 404, message: 'Cryptocurrency not found' }
+  };
+
+  const { status = 500, message = 'An unexpected error occurred' } = 
+    errorMap[err.message] || { status: 500, message: err.message };
+
+  res.status(status).json({
+    error: status === 500 ? 'Internal Server Error' : 'Bad Request',
+    message,
+    status
+  });
 }
 
 /**
@@ -77,11 +75,6 @@ function getCoinDetails(req, res, next) {
   try {
     const coinId = req.params.coinId;
     
-    // Check if coinId is undefined or empty
-    if (!coinId) {
-      throw new Error('Coin ID is required');
-    }
-    
     // Validate input
     validateCoinId(coinId);
     
@@ -90,6 +83,7 @@ function getCoinDetails(req, res, next) {
     // Check cache first
     const cachedCoin = coinCache.get(normalizedCoinId);
     if (cachedCoin) {
+      logger.info(`Cache hit for coin: ${normalizedCoinId}`);
       return res.json(cachedCoin);
     }
     
@@ -97,6 +91,7 @@ function getCoinDetails(req, res, next) {
     const coin = mockCoins[normalizedCoinId];
     
     if (!coin) {
+      logger.warn(`Coin not found: ${normalizedCoinId}`);
       throw new Error('Coin not found');
     }
     
