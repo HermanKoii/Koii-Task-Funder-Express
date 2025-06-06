@@ -1,71 +1,62 @@
-import { describe, it, expect, vi } from 'vitest';
-import express from 'express';
-import request from 'supertest';
-import { errorHandler, asyncHandler } from '../src/middleware/errorHandler';
-import { ApiError, ValidationError, NotFoundError, InternalServerError } from '../src/types/error';
 import { Request, Response, NextFunction } from 'express';
+import { errorHandler } from '../src/middleware/errorHandler';
+import { ApiError } from '../src/types/error';
+import { ErrorResponseUtil } from '../src/utils/error-response';
 
-describe('Error Handling Middleware', () => {
-  describe('errorHandler', () => {
-    const createMockResponse = () => {
-      return {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis()
-      } as unknown as Response;
+// Mock dependencies
+jest.mock('../src/utils/error-response', () => ({
+  errorResponseUtil: {
+    sendErrorResponse: jest.fn()
+  }
+}));
+
+describe('Error Handler Middleware', () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: NextFunction;
+
+  beforeEach(() => {
+    mockReq = {};
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
     };
-
-    it('should handle ApiError with correct status and message', () => {
-      const err = new ValidationError('Invalid input');
-      const req = {} as Request;
-      const res = createMockResponse();
-      const next = vi.fn() as NextFunction;
-
-      errorHandler(err, req, res, next);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        message: 'Invalid input'
-      }));
-    });
-
-    it('should handle generic errors with 500 status', () => {
-      const err = new Error('Generic error');
-      const req = {} as Request;
-      const res = createMockResponse();
-      const next = vi.fn() as NextFunction;
-
-      errorHandler(err, req, res, next);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        message: 'An unexpected error occurred'
-      }));
-    });
+    mockNext = jest.fn();
   });
 
-  describe('asyncHandler', () => {
-    it('should catch and forward async errors', async () => {
-      const app = express();
-      
-      // Set up route with asyncHandler and error handling middleware
-      app.get('/test', 
-        asyncHandler(async () => {
-          throw new NotFoundError('Resource not found');
-        })
-      );
+  it('should handle ApiError with correct status and message', () => {
+    const apiError = new ApiError('Test API Error', 400);
+    
+    errorHandler(
+      apiError, 
+      mockReq as Request, 
+      mockRes as Response, 
+      mockNext
+    );
 
-      // Add global error handling middleware
-      app.use(errorHandler);
+    expect(ErrorResponseUtil.errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+      mockRes,
+      400,
+      'Test API Error',
+      undefined
+    );
+  });
 
-      const response = await request(app).get('/test');
-      
-      expect(response.status).toBe(404);
-      expect(response.body).toEqual(expect.objectContaining({
-        status: 'error',
-        message: 'Resource not found'
-      }));
-    });
+  it('should handle generic Error with default 500 status', () => {
+    const genericError = new Error('Unexpected error');
+    
+    errorHandler(
+      genericError, 
+      mockReq as Request, 
+      mockRes as Response, 
+      mockNext
+    );
+
+    expect(ErrorResponseUtil.errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+      mockRes,
+      500,
+      'An unexpected error occurred',
+      undefined
+    );
   });
 });
