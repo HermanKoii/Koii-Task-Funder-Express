@@ -6,6 +6,10 @@ dist/
 coverage/
 .nyc_output/
 .vscode/
+<<<<<<< HEAD
 .idea/
 *.swp
 *.swo
+=======
+.idea/
+>>>>>>> pr-7-HermanL0201-Koii-Task-Funder-Express
