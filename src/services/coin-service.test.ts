@@ -1,5 +1,5 @@
 import { CoinService } from './coin-service';
-import cryptoData from '../data/crypto-prices.json';
+import * as cryptoData from '../data/crypto-prices.json';
 
 describe('CoinService', () => {
   let coinService: CoinService;
