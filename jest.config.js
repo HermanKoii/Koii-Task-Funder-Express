@@ -11,5 +11,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@_koii/create-task-cli$': '<rootDir>/tests/__mocks__/create-task-cli.js'
-  }
+  },
+  verbose: true,
+  collectCoverage: false
 };
