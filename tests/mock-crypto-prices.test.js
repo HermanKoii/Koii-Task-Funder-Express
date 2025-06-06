@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import cryptoPrices from '../src/data/mock-crypto-prices.json';
+import cryptoPrices from '../src/data/mock-crypto-prices.json' assert { type: 'json' };
 
 describe('Mock Cryptocurrency Prices', () => {
     // Test that the mock data has the expected structure
