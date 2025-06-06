@@ -1,18 +1,11 @@
 node_modules/
 dist/
 .env
-<<<<<<< HEAD
-__pycache__/
-.vitest/
-coverage/
+.vscode/
+.idea/
 *.log
-=======
-*.log
+*.swp
 .DS_Store
 coverage/
 .nyc_output/
-.vscode/
-.idea/
-*.swp
-*.swo
->>>>>>> pr-7-Vuk7912-Koii-Task-Funder-Express
+.vitest_cache/
