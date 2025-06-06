@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params || {};
+  const coinId = req?.params?.coinId ?? '';
 
   if (!coinId || typeof coinId !== 'string' || coinId.trim() === '') {
     return res.status(400).json({ error: 'Invalid or missing coin ID' });
@@ -11,7 +11,8 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { limit, offset } = req.query || {};
+  const limit = req?.query?.limit ?? undefined;
+  const offset = req?.query?.offset ?? undefined;
 
   if (limit && (isNaN(Number(limit)) || Number(limit) < 1)) {
     return res.status(400).json({ error: 'Invalid limit parameter' });
@@ -25,7 +26,7 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
 }
 
 export function validateCoinSearchParams(req: Request, res: Response, next: NextFunction) {
-  const { query } = req.query || {};
+  const query = req?.query?.query ?? '';
 
   if (!query || typeof query !== 'string' || query.trim().length === 0) {
     return res.status(400).json({ error: 'Search query is required' });
@@ -35,7 +36,7 @@ export function validateCoinSearchParams(req: Request, res: Response, next: Next
 }
 
 export function validateCoinDetailsParams(req: Request, res: Response, next: NextFunction) {
-  const { id } = req.params || {};
+  const id = req?.params?.id ?? '';
 
   if (!id || typeof id !== 'string' || !/^[a-z0-9-]+$/.test(id.toLowerCase())) {
     return res.status(400).json({ error: 'Invalid coin ID' });
