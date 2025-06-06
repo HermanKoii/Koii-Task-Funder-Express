@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Cryptocurrency Price Tracking Application",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "node --experimental-vm-modules node_modules/vitest/vitest.mjs",
     "start": "node index.js"
   },
   "dependencies": {
@@ -16,5 +17,8 @@
     "supertest": "^6.3.3",
     "typescript": "^5.1.3",
     "vitest": "^0.32.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
