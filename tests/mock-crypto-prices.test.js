@@ -4,7 +4,7 @@ import cryptoPrices from '../src/data/mock-crypto-prices.json';
 describe('Mock Cryptocurrency Prices', () => {
     // Test that the mock data has the expected structure
     it('should have valid cryptocurrency data', () => {
-        const supportedCoins = ['bitcoin', 'ethereum', 'dogecoin', 'cardano'];
+        const supportedCoins = ['bitcoin', 'ethereum', 'cardano'];
         
         // Check if all expected coins are present
         supportedCoins.forEach(coin => {
@@ -19,11 +19,9 @@ describe('Mock Cryptocurrency Prices', () => {
             expect(coin).toHaveProperty('symbol');
             expect(coin).toHaveProperty('name');
             expect(coin).toHaveProperty('current_price');
-            expect(coin).toHaveProperty('market_cap');
-            expect(coin).toHaveProperty('market_cap_rank');
-            expect(coin).toHaveProperty('total_volume');
-            expect(coin).toHaveProperty('price_change_percentage_24h');
-            expect(coin).toHaveProperty('last_updated');
+            expect(coin).toHaveProperty('usd');
+            expect(coin).toHaveProperty('eur');
+            expect(coin).toHaveProperty('jpy');
         });
     });
 
@@ -33,11 +31,14 @@ describe('Mock Cryptocurrency Prices', () => {
             expect(typeof coin.current_price).toBe('number');
             expect(coin.current_price).toBeGreaterThan(0);
             
-            expect(typeof coin.market_cap).toBe('number');
-            expect(coin.market_cap).toBeGreaterThan(0);
+            expect(typeof coin.usd).toBe('number');
+            expect(coin.usd).toBeGreaterThan(0);
             
-            expect(typeof coin.total_volume).toBe('number');
-            expect(coin.total_volume).toBeGreaterThan(0);
+            expect(typeof coin.eur).toBe('number');
+            expect(coin.eur).toBeGreaterThan(0);
+            
+            expect(typeof coin.jpy).toBe('number');
+            expect(coin.jpy).toBeGreaterThan(0);
         });
     });
 });
