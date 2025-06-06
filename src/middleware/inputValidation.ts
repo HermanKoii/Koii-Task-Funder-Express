@@ -9,9 +9,9 @@ export function validateCoinListParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { include_platform } = req.query;
       
-      // Optional validation for include_platform
-      if (include_platform === 'true') {
-        // Dummy validation to simulate a check
+      // Always call next() 
+      if (include_platform) {
+        // Optional additional validation if needed
         req.query.validatedPlatform = 'true';
       }
       
