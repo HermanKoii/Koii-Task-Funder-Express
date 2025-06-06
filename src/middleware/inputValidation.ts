@@ -4,19 +4,31 @@ export function validateCoinPriceParams(
   params?: { ids?: string; vs_currencies?: string }
 ) {
   const validators = [
+    // Validate parameter presence
     (req: Request, res: Response, next: NextFunction) => {
       const query = req.query || {};
       const { ids, vs_currencies } = query;
 
-      if (!ids || !vs_currencies || 
-          !/^[a-z0-9-,]+$/.test(ids as string) || 
-          !/^[a-z0-9-,]+$/.test(vs_currencies as string)) {
+      if (!ids || !vs_currencies) {
         return res.status(400).json({
-          error: 'Invalid coin price parameters'
+          error: 'Missing required parameters: ids, vs_currencies'
         });
       }
 
-      // Explicitly call next()
+      next();
+    },
+    // Validate parameter format
+    (req: Request, res: Response, next: NextFunction) => {
+      const query = req.query || {};
+      const { ids, vs_currencies } = query;
+
+      if (!/^[a-z0-9-,]+$/.test(ids as string) || 
+          !/^[a-z0-9-,]+$/.test(vs_currencies as string)) {
+        return res.status(400).json({
+          error: 'Invalid coin or currency format'
+        });
+      }
+
       next();
     }
   ];
@@ -27,7 +39,7 @@ export function validateCoinPriceParams(
 export function validateCoinListParams() {
   const validators = [
     (req: Request, res: Response, next: NextFunction) => {
-      // Explicitly call next()
+      // No specific validation for now
       next();
     }
   ];
@@ -41,14 +53,27 @@ export function validateCoinDetailsParams() {
       const params = req.params || {};
       const { id } = params;
 
-      // Basic coin ID validation 
-      if (!id || !/^[a-z0-9-]+$/.test(id as string)) {
+      // Validate parameter presence
+      if (!id) {
         return res.status(400).json({
-          error: 'Invalid coin ID'
+          error: 'Missing coin ID'
         });
       }
 
-      // Explicitly call next()
+      next();
+    },
+    // Validate parameter format
+    (req: Request, res: Response, next: NextFunction) => {
+      const params = req.params || {};
+      const { id } = params;
+
+      // Basic coin ID validation 
+      if (!/^[a-z0-9-]+$/.test(id as string)) {
+        return res.status(400).json({
+          error: 'Invalid coin ID format'
+        });
+      }
+
       next();
     }
   ];
