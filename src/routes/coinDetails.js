@@ -1,5 +1,5 @@
 import express from 'express';
-import NodeCache from 'node-cache';
+import CacheService from '../cache-service';
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -19,8 +19,8 @@ const mockCoins = {
   }
 };
 
-// Create a cache instance
-const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
+// Get the singleton cache service instance
+const cacheService = CacheService.getInstance();
 
 /**
  * Validate coin ID input
@@ -88,7 +88,7 @@ function getCoinDetails(req, res, next) {
     const normalizedCoinId = coinId.toLowerCase();
     
     // Check cache first
-    const cachedCoin = coinCache.get(normalizedCoinId);
+    const cachedCoin = cacheService.get(normalizedCoinId);
     if (cachedCoin) {
       return res.json(cachedCoin);
     }
@@ -100,8 +100,8 @@ function getCoinDetails(req, res, next) {
       throw new Error('Coin not found');
     }
     
-    // Cache the result
-    coinCache.set(normalizedCoinId, coin);
+    // Cache the result with default TTL
+    cacheService.set(normalizedCoinId, coin);
     
     res.json(coin);
   } catch (error) {
