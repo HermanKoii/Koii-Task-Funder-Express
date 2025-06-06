@@ -7,7 +7,8 @@ import { Request, Response, NextFunction } from 'express';
  * @param next Express next middleware function
  */
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coin, currency } = req.params;
+  const coin = req.params ? req.params.coin : undefined;
+  const currency = req.params ? req.params.currency : undefined;
 
   if (!coin || !currency) {
     return res.status(400).json({ error: 'Coin and currency are required' });
@@ -31,7 +32,7 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
  * @param next Express next middleware function
  */
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { limit } = req.query;
+  const limit = req.query ? req.query.limit : undefined;
 
   if (limit) {
     const parsedLimit = parseInt(limit as string, 10);
@@ -44,22 +45,22 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
 }
 
 /**
- * Validate specific coin parameter
- * @param req Express request object
- * @param res Express response object
- * @param next Express next middleware function
+ * Create coin details parameter validators
+ * @returns Middleware function for coin details validation
  */
-export function validateCoin(req: Request, res: Response, next: NextFunction) {
-  const { coin } = req.params;
+export function validateCoinDetailsParams() {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const coin = req.params ? req.params.id : undefined;
 
-  if (!coin) {
-    return res.status(400).json({ error: 'Coin parameter is required' });
-  }
+    if (!coin) {
+      return res.status(400).json({ error: 'Coin ID is required' });
+    }
 
-  const coinRegex = /^[a-zA-Z]+$/;
-  if (!coinRegex.test(coin)) {
-    return res.status(400).json({ error: 'Invalid coin format' });
-  }
+    const coinRegex = /^[a-zA-Z]+$/;
+    if (!coinRegex.test(coin)) {
+      return res.status(400).json({ error: 'Invalid coin ID format' });
+    }
 
-  next();
+    next();
+  };
 }
