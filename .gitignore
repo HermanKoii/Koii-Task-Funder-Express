@@ -5,6 +5,7 @@ __pycache__/
 *.log
 .DS_Store
 coverage/
+<<<<<<< HEAD
 .nyc_output/
 .vscode/
 .idea/
@@ -12,3 +13,6 @@ coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+=======
+.vitest/
+>>>>>>> pr-6-Vuk7912-Koii-Task-Funder-Express
