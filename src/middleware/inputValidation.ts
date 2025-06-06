@@ -7,10 +7,13 @@ import { Request, Response, NextFunction } from 'express';
 export function validateCoinListParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
-      // Optional: Add any additional validation for coin list parameters
       const { include_platform } = req.query;
-
-      // Optional validation logic here
+      
+      // Optional validation, but ensure next is called
+      if (include_platform) {
+        // Add any specific validation if needed
+      }
+      
       next();
     }
   ];
@@ -42,6 +45,11 @@ export function validateCoinPriceParams() {
         });
       }
 
+      next();
+    },
+    (req: Request, res: Response, next: NextFunction) => {
+      const { vs_currencies } = req.query;
+
       // Validate vs_currencies
       if (!vs_currencies || typeof vs_currencies !== 'string' || vs_currencies.trim().length === 0) {
         return res.status(400).json({
@@ -70,6 +78,11 @@ export function validateCoinDetailsParams() {
           message: 'Coin ID is required and must be a non-empty string'
         });
       }
+
+      next();
+    },
+    (req: Request, res: Response, next: NextFunction) => {
+      const coinId = req.params.id;
 
       // Optional: Add regex validation for coin ID format
       const coinIdRegex = /^[a-z0-9-]+$/i;
