@@ -1,17 +1,6 @@
 import { Response } from 'express';
 import winston from 'winston';
-
-/**
- * Enum representing standard HTTP error codes
- */
-export enum HttpErrorCode {
-  BAD_REQUEST = 400,
-  UNAUTHORIZED = 401,
-  FORBIDDEN = 403,
-  NOT_FOUND = 404,
-  INTERNAL_SERVER_ERROR = 500,
-  SERVICE_UNAVAILABLE = 503
-}
+import { HttpErrorCode } from './http-error-codes';
 
 /**
  * Interface for standardized error response
@@ -32,16 +21,24 @@ export class ErrorResponseUtil {
   private logger: winston.Logger;
 
   constructor() {
-    // Initialize Winston logger
+    // Initialize Winston logger with improved configuration
     this.logger = winston.createLogger({
       level: 'error',
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.splat(),
         winston.format.json()
       ),
       transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log' })
+        new winston.transports.Console({
+          format: winston.format.simple()
+        }),
+        new winston.transports.File({ 
+          filename: 'error.log',
+          maxsize: 5242880, // 5MB
+          maxFiles: 5
+        })
       ]
     });
   }
@@ -55,7 +52,7 @@ export class ErrorResponseUtil {
    */
   public sendErrorResponse(
     res: Response, 
-    errorCode: HttpErrorCode, 
+    errorCode: number, 
     message: string, 
     details?: string | Record<string, unknown>
   ): Response {
@@ -68,10 +65,11 @@ export class ErrorResponseUtil {
       }
     };
 
-    // Log the error
+    // Log the error with additional context
     this.logger.error(message, { 
       code: errorCode, 
-      details 
+      details,
+      timestamp: new Date().toISOString()
     });
 
     return res.status(errorCode).json(errorResponse);
