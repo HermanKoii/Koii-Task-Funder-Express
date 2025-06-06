@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
+  if (!req.query) {
+    return res.status(400).json({ error: 'Missing query parameters' });
+  }
+
   const { ids, vs_currencies } = req.query;
 
   if (!ids) {
@@ -15,6 +19,10 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
+  if (!req.query) {
+    return res.status(400).json({ error: 'Missing query parameters' });
+  }
+
   const { order, per_page } = req.query;
 
   if (order && !['market_cap_desc', 'market_cap_asc'].includes(order as string)) {
@@ -36,4 +44,18 @@ export function validateCoin(req: Request, res: Response, next: NextFunction) {
   }
 
   next();
+}
+
+export function validateCoinDetailsParams(coinId?: string) {
+  return {
+    validateId: (req: Request, res: Response, next: NextFunction) => {
+      const id = coinId || req.params.id;
+      
+      if (!id || !/^[a-z0-9-]+$/.test(id)) {
+        return res.status(400).json({ error: 'Invalid coin ID' });
+      }
+
+      next();
+    }
+  };
 }
