@@ -1,14 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '../src/middleware/errorHandler';
 import { ApiError } from '../src/types/error';
-import { ErrorResponseUtil } from '../src/utils/error-response';
-
-// Mock dependencies
-jest.mock('../src/utils/error-response', () => ({
-  errorResponseUtil: {
-    sendErrorResponse: jest.fn()
-  }
-}));
+import { errorResponseUtil } from '../src/utils/error-response';
 
 describe('Error Handler Middleware', () => {
   let mockReq: Partial<Request>;
@@ -34,7 +27,7 @@ describe('Error Handler Middleware', () => {
       mockNext
     );
 
-    expect(ErrorResponseUtil.errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+    expect(errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
       mockRes,
       400,
       'Test API Error',
@@ -52,7 +45,7 @@ describe('Error Handler Middleware', () => {
       mockNext
     );
 
-    expect(ErrorResponseUtil.errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+    expect(errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
       mockRes,
       500,
       'An unexpected error occurred',
