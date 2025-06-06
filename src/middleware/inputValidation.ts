@@ -8,6 +8,9 @@ export function validateCoinListParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
       // Optional: Add any additional validation for coin list parameters
+      const { include_platform } = req.query;
+
+      // Optional validation logic here
       next();
     }
   ];
