@@ -1,4 +1,18 @@
-node_modules
+node_modules/
+dist/
 .env
-.env.funder
-*.pem
+__pycache__/
+<<<<<<< HEAD
+.vitest-cache/
+coverage/
+*.log
+=======
+*.log
+.DS_Store
+coverage/
+.nyc_output/
+.vscode/
+.idea/
+*.swp
+*.swo
+>>>>>>> pr-4-Merango-Koii-Task-Funder-Express
