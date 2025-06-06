@@ -7,6 +7,7 @@ describe('Error Handler Middleware', () => {
   let mockReq: Partial<Request>;
   let mockRes: Partial<Response>;
   let mockNext: NextFunction;
+  let sendErrorResponseSpy: jest.SpyInstance;
 
   beforeEach(() => {
     mockReq = {};
@@ -15,6 +16,14 @@ describe('Error Handler Middleware', () => {
       json: jest.fn().mockReturnThis()
     };
     mockNext = jest.fn();
+
+    // Spy on the sendErrorResponse method
+    sendErrorResponseSpy = jest.spyOn(errorResponseUtil, 'sendErrorResponse');
+  });
+
+  afterEach(() => {
+    // Restore the original method
+    sendErrorResponseSpy.mockRestore();
   });
 
   it('should handle ApiError with correct status and message', () => {
@@ -27,7 +36,7 @@ describe('Error Handler Middleware', () => {
       mockNext
     );
 
-    expect(errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+    expect(sendErrorResponseSpy).toHaveBeenCalledWith(
       mockRes,
       400,
       'Test API Error',
@@ -45,7 +54,7 @@ describe('Error Handler Middleware', () => {
       mockNext
     );
 
-    expect(errorResponseUtil.sendErrorResponse).toHaveBeenCalledWith(
+    expect(sendErrorResponseSpy).toHaveBeenCalledWith(
       mockRes,
       500,
       'An unexpected error occurred',
