@@ -3,17 +3,17 @@ import {
   validateCoinPriceParams, 
   validateCoinListParams, 
   validateCoinDetailsParams 
-} from '../../src/middleware/inputValidation.ts';
+} from '../../src/middleware/inputValidation';
 
 function createMockReqRes(query = {}, params = {}) {
+  const jsonResponse = {
+    json: (body) => body,
+    status: () => ({ json: (body) => body })
+  };
+  
   return {
     req: { query, params },
-    res: {
-      status: (code) => ({
-        json: (body) => ({ status: code, body })
-      }),
-      json: (body) => body
-    },
+    res: jsonResponse,
     next: () => {}
   };
 }
@@ -26,18 +26,20 @@ describe('Input Validation Middleware', () => {
         vs_currencies: 'usd'
       });
 
-      const middleware = validateCoinPriceParams()(req, res, next);
-      expect(middleware).toBeUndefined(); // Successful validation passes
+      const middleware = validateCoinPriceParams();
+      const result = middleware(req, res, next);
+      expect(result).toBeUndefined(); // Successful validation passes
     });
 
     it('should reject invalid coin price query params', () => {
       const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin!@#',
+        ids: 'dogecoin',
         vs_currencies: ''
       });
 
-      const middleware = validateCoinPriceParams()(req, res, next);
-      expect(middleware).toBeDefined(); // Invalid input returns an error
+      const middleware = validateCoinPriceParams();
+      const result = middleware(req, res, next);
+      expect(result).toHaveProperty('error'); // Invalid input returns an error
     });
   });
 
@@ -47,8 +49,9 @@ describe('Input Validation Middleware', () => {
         include_platform: 'true'
       });
 
-      const middleware = validateCoinListParams()(req, res, next);
-      expect(middleware).toBeUndefined(); // Successful validation passes
+      const middleware = validateCoinListParams();
+      const result = middleware(req, res, next);
+      expect(result).toBeUndefined(); // Successful validation passes
     });
   });
 
@@ -58,17 +61,19 @@ describe('Input Validation Middleware', () => {
         id: 'bitcoin'
       });
 
-      const middleware = validateCoinDetailsParams()(req, res, next);
-      expect(middleware).toBeUndefined(); // Successful validation passes
+      const middleware = validateCoinDetailsParams();
+      const result = middleware(req, res, next);
+      expect(result).toBeUndefined(); // Successful validation passes
     });
 
     it('should reject invalid coin ID', () => {
       const { req, res, next } = createMockReqRes({}, {
-        id: 'bitcoin!@#'
+        id: 'dogecoin'
       });
 
-      const middleware = validateCoinDetailsParams()(req, res, next);
-      expect(middleware).toBeDefined(); // Invalid input returns an error
+      const middleware = validateCoinDetailsParams();
+      const result = middleware(req, res, next);
+      expect(result).toHaveProperty('error'); // Invalid input returns an error
     });
   });
 });

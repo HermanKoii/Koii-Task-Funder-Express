@@ -1,11 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { deleteProductFromWishlist } from '../controllers/wishlistController';
 import { Wishlist } from '../models/Wishlist';
-import mongoose from 'mongoose';
 
-// Mock dependencies
-vi.mock('../models/Wishlist');
-vi.mock('mongoose');
+// Mock the entire Mongoose model
+vi.mock('../models/Wishlist', () => ({
+  Wishlist: {
+    findOne: vi.fn(),
+  }
+}));
 
 describe('Wishlist Controller - Delete Product', () => {
   const mockReq: any = {
