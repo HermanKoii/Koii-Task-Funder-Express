@@ -1,4 +1,3 @@
-const { describe, it, expect } = require('@jest/globals');
 const { 
   validateCoinPriceParams, 
   validateCoinListParams, 
@@ -11,7 +10,10 @@ describe('Input Validation Middleware', () => {
       const validReq = {
         query: { ids: 'bitcoin', vs_currencies: 'usd' }
       };
-      const validRes = {};
+      const validRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
       const validNext = jest.fn();
 
       validateCoinPriceParams(validReq, validRes, validNext);
