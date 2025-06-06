@@ -1,0 +1,12 @@
+{
+  "bitcoin": {
+    "usd": 50000,
+    "eur": 42000,
+    "name": "Bitcoin"
+  },
+  "ethereum": {
+    "usd": 3000,
+    "eur": 2500,
+    "name": "Ethereum"
+  }
+}
