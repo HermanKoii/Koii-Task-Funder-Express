@@ -1,32 +1,49 @@
 import { Request, Response, NextFunction } from 'express';
 
 /**
+ * Generic input validation middleware generator
+ * @param validators Array of validation functions
+ * @returns Array of middleware functions
+ */
+function createValidationMiddleware(validators: ((req: Request, res: Response) => boolean)[]) {
+  return [
+    (req: Request, res: Response, next: NextFunction) => {
+      for (const validate of validators) {
+        if (!validate(req, res)) {
+          return; // Stop if any validation fails
+        }
+      }
+      next(); // Call next if all validations pass
+    }
+  ];
+}
+
+/**
  * Validate coin details parameters
  * @returns {Function[]} Array of middleware functions for validation
  */
 export function validateCoinDetailsParams(): ((req: Request, res: Response, next: NextFunction) => void)[] {
-  return [
-    (req: Request, res: Response, next: NextFunction) => {
+  const validators = [
+    (req: Request, res: Response) => {
       const params = req.params || {};
       const { id } = params;
       
       if (!id) {
-        return res.status(400).json({ error: 'Coin ID is required' });
+        res.status(400).json({ error: 'Coin ID is required' });
+        return false;
       }
 
       const coinIdRegex = /^[a-z0-9-]+$/i;
       if (!coinIdRegex.test(id)) {
-        return res.status(400).json({ error: 'Invalid coin ID format' });
+        res.status(400).json({ error: 'Invalid coin ID format' });
+        return false;
       }
 
-      next();
-    },
-    // Additional validation steps can be added here
-    (req: Request, res: Response, next: NextFunction) => {
-      // Example of an additional validation step
-      next();
+      return true;
     }
   ];
+
+  return createValidationMiddleware(validators);
 }
 
 /**
@@ -34,27 +51,26 @@ export function validateCoinDetailsParams(): ((req: Request, res: Response, next
  * @returns {Function[]} Array of middleware functions for validation
  */
 export function validateCoinPriceParams(): ((req: Request, res: Response, next: NextFunction) => void)[] {
-  return [
-    (req: Request, res: Response, next: NextFunction) => {
+  const validators = [
+    (req: Request, res: Response) => {
       const query = req.query || {};
       const { ids, vs_currencies } = query;
       
       if (!ids || typeof ids !== 'string') {
-        return res.status(400).json({ error: 'Invalid or missing coin ID' });
+        res.status(400).json({ error: 'Invalid or missing coin ID' });
+        return false;
       }
 
       if (!vs_currencies || typeof vs_currencies !== 'string') {
-        return res.status(400).json({ error: 'Invalid or missing currency' });
+        res.status(400).json({ error: 'Invalid or missing currency' });
+        return false;
       }
 
-      next();
-    },
-    // Additional validation steps can be added here
-    (req: Request, res: Response, next: NextFunction) => {
-      // Example of an additional validation step
-      next();
+      return true;
     }
   ];
+
+  return createValidationMiddleware(validators);
 }
 
 /**
@@ -62,8 +78,8 @@ export function validateCoinPriceParams(): ((req: Request, res: Response, next: 
  * @returns {Function[]} Array of middleware functions for validation
  */
 export function validateCoinListParams(): ((req: Request, res: Response, next: NextFunction) => void)[] {
-  return [
-    (req: Request, res: Response, next: NextFunction) => {
+  const validators = [
+    (req: Request, res: Response) => {
       const query = req.query || {};
       const { page = 1, limit = 10 } = query;
 
@@ -71,21 +87,20 @@ export function validateCoinListParams(): ((req: Request, res: Response, next: N
       const parsedLimit = Number(limit);
 
       if (isNaN(parsedPage) || parsedPage < 1) {
-        return res.status(400).json({ error: 'Invalid page number' });
+        res.status(400).json({ error: 'Invalid page number' });
+        return false;
       }
 
       if (isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
-        return res.status(400).json({ error: 'Invalid limit. Must be between 1 and 100' });
+        res.status(400).json({ error: 'Invalid limit. Must be between 1 and 100' });
+        return false;
       }
 
-      next();
-    },
-    // Additional validation steps can be added here
-    (req: Request, res: Response, next: NextFunction) => {
-      // Example of an additional validation step
-      next();
+      return true;
     }
   ];
+
+  return createValidationMiddleware(validators);
 }
 
 /**
@@ -93,25 +108,24 @@ export function validateCoinListParams(): ((req: Request, res: Response, next: N
  * @returns {Function[]} Array of middleware functions for validation
  */
 export function validateCoinData(): ((req: Request, res: Response, next: NextFunction) => void)[] {
-  return [
-    (req: Request, res: Response, next: NextFunction) => {
+  const validators = [
+    (req: Request, res: Response) => {
       const body = req.body || {};
       const { coin } = body;
 
       if (!coin) {
-        return res.status(400).json({ error: 'Coin data is required' });
+        res.status(400).json({ error: 'Coin data is required' });
+        return false;
       }
 
       if (!coin.id || !coin.name || !coin.symbol) {
-        return res.status(400).json({ error: 'Coin must have id, name, and symbol' });
+        res.status(400).json({ error: 'Coin must have id, name, and symbol' });
+        return false;
       }
 
-      next();
-    },
-    // Additional validation steps can be added here
-    (req: Request, res: Response, next: NextFunction) => {
-      // Example of an additional validation step
-      next();
+      return true;
     }
   ];
+
+  return createValidationMiddleware(validators);
 }
