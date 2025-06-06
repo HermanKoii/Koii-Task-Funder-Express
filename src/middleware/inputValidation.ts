@@ -9,9 +9,10 @@ export function validateCoinListParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { include_platform } = req.query;
       
-      // Optional validation, but ensure next is called
-      if (include_platform) {
-        // Add any specific validation if needed
+      // Dummy validation to ensure next is called
+      if (include_platform === 'true') {
+        // Hypothetical validation logic
+        req.query.validatedPlatform = 'true';
       }
       
       next();
@@ -26,7 +27,7 @@ export function validateCoinListParams() {
 export function validateCoinPriceParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
-      const { ids, vs_currencies } = req.query;
+      const { ids } = req.query;
 
       // Validate ids
       if (!ids || typeof ids !== 'string' || ids.trim().length === 0) {
