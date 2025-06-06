@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
 import crypto from 'crypto';
+import { createServer } from './src/server.js';
 
 // Mock the external dependencies
 vi.mock('@_koii/create-task-cli', () => ({
@@ -33,11 +34,9 @@ vi.mock('axios', () => ({
   post: vi.fn().mockResolvedValue({})
 }));
 
-// Import the app after mocking dependencies
-const app = require('./index');
-
 describe('Task Funding Service', () => {
   let server;
+  let app;
 
   beforeAll(() => {
     // Set up environment variables for testing
@@ -46,6 +45,8 @@ describe('Task Funding Service', () => {
   });
 
   beforeEach(() => {
+    // Create a new server for each test
+    app = createServer();
     server = app.listen(0); // Use a random available port
   });
 
