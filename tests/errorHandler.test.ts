@@ -49,7 +49,7 @@ describe('Error Handling Middleware', () => {
 
     // Set development environment to test stack trace
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'development';
+    process.env.NODE_ENV = 'production';
 
     errorHandler(mockError, mockReq, mockRes, mockNext);
 
@@ -75,6 +75,13 @@ describe('Error Handling Middleware', () => {
     } as unknown as Response;
     const mockNext = () => {};
 
+    // Set development environment to test stack trace
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+
     errorHandler(genericError, mockReq, mockRes, mockNext);
+
+    // Restore original environment
+    process.env.NODE_ENV = originalEnv;
   });
 });
