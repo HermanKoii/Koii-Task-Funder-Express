@@ -7,7 +7,8 @@ import { Request, Response, NextFunction } from 'express';
  * @param next Express next middleware function
  */
 export function validateCoinDetailsParams(req: Request, res: Response, next: NextFunction) {
-  const { id } = req.params;
+  const params = req.params || {};
+  const { id } = params;
   
   if (!id) {
     return res.status(400).json({ error: 'Coin ID is required' });
@@ -28,7 +29,8 @@ export function validateCoinDetailsParams(req: Request, res: Response, next: Nex
  * @param next Express next middleware function
  */
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params || {};
+  const params = req.params || {};
+  const { coinId } = params;
   
   if (!coinId) {
     return res.status(400).json({ error: 'Coin ID is required' });
@@ -48,7 +50,8 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
  * @param next Express next middleware function
  */
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { page = 1, limit = 10 } = req.query || {};
+  const query = req.query || {};
+  const { page = 1, limit = 10 } = query;
 
   const parsedPage = Number(page);
   const parsedLimit = Number(limit);
@@ -71,7 +74,8 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
  * @param next Express next middleware function
  */
 export function validateCoinData(req: Request, res: Response, next: NextFunction) {
-  const { coin } = req.body || {};
+  const body = req.body || {};
+  const { coin } = body;
 
   if (!coin) {
     return res.status(400).json({ error: 'Coin data is required' });
