@@ -7,13 +7,12 @@ import { Request, Response, NextFunction } from 'express';
  * @param next Express next function
  */
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { page = 1, limit = 10 } = req.query;
+  // Use default values if query params are not provided
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = req.query.limit ? Number(req.query.limit) : 10;
 
   // Validate page number
-  const pageNum = Number(page);
-  const limitNum = Number(limit);
-
-  if (isNaN(pageNum) || pageNum < 1) {
+  if (isNaN(page) || page < 1) {
     return res.status(400).json({
       error: 'Invalid Page',
       message: 'Page must be a positive number'
@@ -21,15 +20,16 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
   }
 
   // Validate limit
-  if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+  if (isNaN(limit) || limit < 1 || limit > 100) {
     return res.status(400).json({
       error: 'Invalid Limit',
       message: 'Limit must be between 1 and 100'
     });
   }
 
-  req.query.page = String(pageNum);
-  req.query.limit = String(limitNum);
+  // Attach validated and sanitized values to request
+  req.query.page = String(page);
+  req.query.limit = String(limit);
 
   next();
 }
@@ -41,7 +41,7 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
  * @param next Express next function
  */
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params;
+  const coinId = req.params.coinId;
 
   if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
     return res.status(400).json({
@@ -50,22 +50,40 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
     });
   }
 
+  // Optional: Add regex validation for coin ID format
+  const coinIdRegex = /^[a-z0-9-]+$/i;
+  if (!coinIdRegex.test(coinId)) {
+    return res.status(400).json({
+      error: 'Invalid Coin ID Format',
+      message: 'Coin ID can only contain letters, numbers, and hyphens'
+    });
+  }
+
   next();
 }
 
 /**
- * Validate specific coin parameters
+ * Validate coin details parameters
  * @param req Express request object
  * @param res Express response object
  * @param next Express next function
  */
-export function validateCoin(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params;
+export function validateCoinDetailsParams(req: Request, res: Response, next: NextFunction) {
+  const coinId = req.params.coinId;
 
   if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
     return res.status(400).json({
-      error: 'Invalid Coin',
+      error: 'Invalid Coin ID',
       message: 'Coin ID is required and must be a non-empty string'
+    });
+  }
+
+  // Optional: Add regex validation for coin ID format
+  const coinIdRegex = /^[a-z0-9-]+$/i;
+  if (!coinIdRegex.test(coinId)) {
+    return res.status(400).json({
+      error: 'Invalid Coin ID Format',
+      message: 'Coin ID can only contain letters, numbers, and hyphens'
     });
   }
 
