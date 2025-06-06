@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const query = req.query || {};
+  const query = req.query ?? {};
 
   const { ids, vs_currencies } = query;
 
@@ -17,7 +17,7 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const query = req.query || {};
+  const query = req.query ?? {};
 
   const { order, per_page } = query;
 
@@ -43,13 +43,15 @@ export function validateCoin(req: Request, res: Response, next: NextFunction) {
 }
 
 export function validateCoinDetailsParams(coinId?: string) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const id = coinId || req.params.id;
-    
-    if (!id || !/^[a-z0-9-]+$/.test(id)) {
-      return res.status(400).json({ error: 'Invalid coin ID' });
-    }
+  return {
+    validateId: (req: Request, res: Response, next: NextFunction) => {
+      const id = coinId || req.params.id;
+      
+      if (!id || !/^[a-z0-9-]+$/.test(id)) {
+        return res.status(400).json({ error: 'Invalid coin ID' });
+      }
 
-    next();
+      next();
+    }
   };
 }
