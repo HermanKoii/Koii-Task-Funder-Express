@@ -36,14 +36,26 @@
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
     },
-    "moduleFileExtensions": ["js", "jsx", "ts", "tsx"],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!@_koii/)"
     ]
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", {"targets": {"node": "current"}}],
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
       "@babel/preset-typescript"
     ]
   }
