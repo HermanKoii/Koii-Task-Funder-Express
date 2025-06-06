@@ -4,6 +4,9 @@
     "symbol": "btc",
     "name": "Bitcoin",
     "current_price": 50000.00,
+    "market_cap": 950000000000,
+    "market_cap_rank": 1,
+    "total_volume": 25000000000,
     "usd": 50000.00,
     "eur": 45000.00
   },
@@ -12,6 +15,9 @@
     "symbol": "eth",
     "name": "Ethereum",
     "current_price": 3000.00,
+    "market_cap": 350000000000,
+    "market_cap_rank": 2,
+    "total_volume": 15000000000,
     "usd": 3000.00,
     "eur": 2700.00
   },
@@ -20,7 +26,21 @@
     "symbol": "doge", 
     "name": "Dogecoin",
     "current_price": 0.25,
+    "market_cap": 35000000000,
+    "market_cap_rank": 10,
+    "total_volume": 2000000000,
     "usd": 0.25,
     "eur": 0.22
+  },
+  "cardano": {
+    "id": "cardano",
+    "symbol": "ada",
+    "name": "Cardano",
+    "current_price": 1.50,
+    "market_cap": 45000000000,
+    "market_cap_rank": 5,
+    "total_volume": 3000000000,
+    "usd": 1.50,
+    "eur": 1.35
   }
 }
