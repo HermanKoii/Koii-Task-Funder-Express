@@ -1,13 +1,22 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import Wishlist, { IWishlist } from '../models/Wishlist';
 
-describe('Wishlist Model Test', () => {
-  beforeEach(async () => {
-    // Use an in-memory MongoDB server for testing
-    await mongoose.connect('mongodb://localhost:27017/test_wishlist');
-  });
+let mongoServer: MongoMemoryServer;
 
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  await mongoose.connect(mongoUri);
+});
+
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
+
+describe('Wishlist Model Test', () => {
   it('should create a wishlist with valid data', async () => {
     const userId = new mongoose.Types.ObjectId();
     const productId = new mongoose.Types.ObjectId();
