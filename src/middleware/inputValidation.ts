@@ -19,6 +19,7 @@ export function validateCoinDetailsParams(): ((req: Request, res: Response, next
         return res.status(400).json({ error: 'Invalid coin ID format' });
       }
 
+      // Always call next even if validation passes
       next();
     }
   ];
@@ -42,6 +43,7 @@ export function validateCoinPriceParams(): ((req: Request, res: Response, next: 
         return res.status(400).json({ error: 'Invalid coin ID format' });
       }
 
+      // Always call next even if validation passes
       next();
     }
   ];
@@ -68,6 +70,7 @@ export function validateCoinListParams(): ((req: Request, res: Response, next: N
         return res.status(400).json({ error: 'Invalid limit. Must be between 1 and 100' });
       }
 
+      // Always call next even if validation passes
       next();
     }
   ];
@@ -91,6 +94,7 @@ export function validateCoinData(): ((req: Request, res: Response, next: NextFun
         return res.status(400).json({ error: 'Coin must have id, name, and symbol' });
       }
 
+      // Always call next even if validation passes
       next();
     }
   ];
