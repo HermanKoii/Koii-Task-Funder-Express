@@ -1,14 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 
-export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  // Safely handle undefined req
-  if (!req || !req.query) {
-    return res.status(400).json({
-      error: 'Invalid request parameters'
-    });
+export function validateCoinPriceParams(req: Request | undefined, res: Response | undefined, next: NextFunction | undefined) {
+  // Safely handle undefined inputs
+  if (!req || !res || !next) {
+    if (res && 'status' in res) {
+      return res.status(400).json({
+        error: 'Invalid request parameters'
+      });
+    }
+    return;
   }
 
-  const { ids, vs_currencies } = req.query;
+  // Use non-null assertion for typescript
+  const query = req.query || {};
+  const { ids, vs_currencies } = query;
 
   if (!ids || !vs_currencies) {
     return res.status(400).json({
@@ -19,15 +24,27 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
   next();
 }
 
-export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  // Default implementation passes through
+export function validateCoinListParams(req: Request | undefined, res: Response | undefined, next: NextFunction | undefined) {
+  // Default implementation passes through with optional type handling
   if (next && typeof next === 'function') {
     next();
   }
 }
 
-export function validateCoinDetailsParams(req: Request, res: Response, next: NextFunction) {
-  const { id } = req.params;
+export function validateCoinDetailsParams(req: Request | undefined, res: Response | undefined, next: NextFunction | undefined) {
+  // Safely handle undefined inputs
+  if (!req || !res || !next) {
+    if (res && 'status' in res) {
+      return res.status(400).json({
+        error: 'Invalid request parameters'
+      });
+    }
+    return;
+  }
+
+  // Use non-null assertion and additional checks
+  const params = req.params || {};
+  const { id } = params;
 
   // Basic coin ID validation 
   if (!id || !/^[a-z0-9-]+$/.test(id)) {
