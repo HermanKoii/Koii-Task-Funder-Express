@@ -1,2 +1,2 @@
-// Configurations moved to package.json
+// Configuration moved to package.json
 module.exports = {};
