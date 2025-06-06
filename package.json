@@ -4,7 +4,7 @@
   "description": "Mock implementation of CoinGecko API",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest watch", 
+    "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

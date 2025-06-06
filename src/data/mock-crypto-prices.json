@@ -1,0 +1,11 @@
+{
+  "bitcoin": {
+    "usd": 50000
+  },
+  "ethereum": {
+    "usd": 3000
+  },
+  "solana": {
+    "usd": 100
+  }
+}
