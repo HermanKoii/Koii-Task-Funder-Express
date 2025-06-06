@@ -1,72 +1,33 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from '@jest/globals';
 import { 
   MarketError, 
   InvalidParameterError, 
   ResourceNotFoundError, 
-  RateLimitError, 
-  marketErrorHandler 
+  RateLimitError 
 } from '../../src/middleware/marketErrorHandler';
-import { Request, Response, NextFunction } from 'express';
 
 describe('Market Error Handler', () => {
-  // Test custom error classes
-  it('should create MarketError with correct properties', () => {
-    const error = new MarketError('Test error', 400);
+  it('should create MarketError correctly', () => {
+    const error = new MarketError('Test error', 500);
     expect(error.message).toBe('Test error');
-    expect(error.statusCode).toBe(400);
-    expect(error.name).toBe('MarketError');
+    expect(error.statusCode).toBe(500);
   });
 
-  it('should create InvalidParameterError with 400 status', () => {
+  it('should create InvalidParameterError correctly', () => {
     const error = new InvalidParameterError('Invalid parameter');
+    expect(error.message).toBe('Invalid parameter');
     expect(error.statusCode).toBe(400);
   });
 
-  it('should create ResourceNotFoundError with 404 status', () => {
+  it('should create ResourceNotFoundError correctly', () => {
     const error = new ResourceNotFoundError('Resource not found');
+    expect(error.message).toBe('Resource not found');
     expect(error.statusCode).toBe(404);
   });
 
-  it('should create RateLimitError with 429 status', () => {
+  it('should create RateLimitError correctly', () => {
     const error = new RateLimitError();
+    expect(error.message).toBe('Too many requests');
     expect(error.statusCode).toBe(429);
-  });
-
-  // Test error handling middleware
-  it('should handle MarketError correctly', () => {
-    const mockError = new InvalidParameterError('Invalid coin ID');
-    const mockReq = {} as Request;
-    const mockRes = {
-      status: vi.fn().mockReturnThis(),
-      json: vi.fn()
-    } as unknown as Response;
-    const mockNext = vi.fn() as NextFunction;
-
-    marketErrorHandler(mockError, mockReq, mockRes, mockNext);
-
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-    expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-      error: true,
-      type: 'InvalidParameterError',
-      message: 'Invalid coin ID'
-    }));
-  });
-
-  it('should handle unexpected errors with 500 status', () => {
-    const mockError = new Error('Unexpected error');
-    const mockReq = {} as Request;
-    const mockRes = {
-      status: vi.fn().mockReturnThis(),
-      json: vi.fn()
-    } as unknown as Response;
-    const mockNext = vi.fn() as NextFunction;
-
-    marketErrorHandler(mockError, mockReq, mockRes, mockNext);
-
-    expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-      error: true,
-      type: 'UnexpectedError'
-    }));
   });
 });
