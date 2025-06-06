@@ -49,6 +49,56 @@
         "pull_requests_merged": 8700,
         "commit_count_4_weeks": 350
       }
+    },
+    {
+      "id": "ethereum",
+      "symbol": "eth",
+      "name": "Ethereum",
+      "description": "Decentralized smart contract platform",
+      "image": {
+        "thumb": "https://assets.coingecko.com/coins/images/279/thumb/ethereum.png",
+        "small": "https://assets.coingecko.com/coins/images/279/small/ethereum.png",
+        "large": "https://assets.coingecko.com/coins/images/279/large/ethereum.png"
+      },
+      "market_data": {
+        "current_price": {
+          "usd": 1800,
+          "eur": 1650,
+          "jpy": 252000
+        },
+        "market_cap": {
+          "usd": 220000000000,
+          "eur": 202000000000,
+          "jpy": 30960000000000
+        },
+        "total_volume": {
+          "usd": 5000000000,
+          "eur": 4600000000,
+          "jpy": 702000000000
+        },
+        "price_change_percentage_24h": -1.2,
+        "price_change_percentage_7d": 2.5,
+        "price_change_percentage_30d": 4.3
+      },
+      "links": {
+        "homepage": ["https://ethereum.org"],
+        "blockchain_site": ["https://etherscan.io"],
+        "official_forum_url": ["https://ethereum.org/forum"]
+      },
+      "community_data": {
+        "facebook_likes": null,
+        "twitter_followers": 2100000,
+        "reddit_subscribers": 1600000
+      },
+      "developer_data": {
+        "forks": 15000,
+        "stars": 35000,
+        "subscribers": 2200,
+        "total_issues": 4200,
+        "closed_issues": 4000,
+        "pull_requests_merged": 6500,
+        "commit_count_4_weeks": 250
+      }
     }
   ]
 }
