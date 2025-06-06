@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
 import crypto from 'crypto';
 import { createServer } from './src/server.js';
+import axios from 'axios';
 
 // Mock the external dependencies
 vi.mock('@_koii/create-task-cli', () => ({
@@ -30,12 +31,7 @@ vi.mock('@_koii/web3.js', () => ({
   }
 }));
 
-vi.mock('axios', () => ({
-  default: {
-    post: vi.fn().mockResolvedValue({}),
-  },
-  post: vi.fn().mockResolvedValue({})
-}));
+vi.mock('axios');
 
 describe('Task Funding Service', () => {
   let server;
@@ -79,6 +75,9 @@ describe('Task Funding Service', () => {
   }, 10000);
 
   it('should reject requests from unauthorized users', async () => {
+    // Mock axios.post for unauthorized user case
+    vi.mocked(axios.post).mockResolvedValue({});
+
     const body = 'text=fund+task123+100&user_id=UNAUTHORIZED_USER&response_url=http://example.com';
     const timestamp = Math.floor(Date.now() / 1000);
     
@@ -91,9 +90,19 @@ describe('Task Funding Service', () => {
       .send(body);
     
     expect(response.statusCode).toBe(403);
+    expect(vi.mocked(axios.post)).toHaveBeenCalledWith(
+      'http://example.com', 
+      {
+        response_type: "in_channel",
+        text: 'Sorry, please tag <@U06NM9A2VC1> to add you to the list! '
+      }
+    );
   }, 10000);
 
   it('should successfully fund a task for authorized user', async () => {
+    // Mock axios.post for successful funding
+    vi.mocked(axios.post).mockResolvedValue({});
+
     const body = 'text=task123+100&user_id=U06NM9A2VC1&response_url=http://example.com';
     const timestamp = Math.floor(Date.now() / 1000);
     
@@ -107,9 +116,19 @@ describe('Task Funding Service', () => {
     
     expect(response.statusCode).toBe(200);
     expect(response.text).toBe('Task funded successfully');
+    expect(vi.mocked(axios.post)).toHaveBeenCalledWith(
+      'http://example.com', 
+      {
+        response_type: "in_channel",
+        text: expect.stringContaining('Congrats!')
+      }
+    );
   }, 10000);
 
   it('should handle invalid request body gracefully', async () => {
+    // Mock axios.post for error case
+    vi.mocked(axios.post).mockResolvedValue({});
+
     const body = 'invalid_body';
     const timestamp = Math.floor(Date.now() / 1000);
     
@@ -122,5 +141,6 @@ describe('Task Funding Service', () => {
       .send(body);
     
     expect(response.statusCode).toBe(500);
+    expect(response.text).toBe('Internal server error');
   }, 10000);
 });
