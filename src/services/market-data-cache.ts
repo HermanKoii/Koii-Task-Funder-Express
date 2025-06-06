@@ -33,7 +33,9 @@ class MarketDataCache {
    * @returns {any} Cached data or undefined
    */
   public get<T>(key: string): T | undefined {
-    return this.cache.get(key);
+    const data = this.cache.get(key);
+    console.log(`Cache ${data ? 'hit' : 'miss'}: ${key}`);
+    return data;
   }
 
   /**
@@ -43,6 +45,7 @@ class MarketDataCache {
    * @param {number} [ttl] - Optional time to live in seconds
    */
   public set<T>(key: string, value: T, ttl?: number): boolean {
+    console.log(`Caching data for key: ${key}`);
     return this.cache.set(key, value, ttl);
   }
 
@@ -52,6 +55,7 @@ class MarketDataCache {
    * @returns {number} Number of entries deleted
    */
   public del(key: string): number {
+    console.log(`Deleting cache entry: ${key}`);
     return this.cache.del(key);
   }
 
@@ -59,7 +63,16 @@ class MarketDataCache {
    * Clear entire cache
    */
   public flush(): void {
+    console.log('Flushing entire cache');
     this.cache.flushAll();
+  }
+
+  /**
+   * Get cache statistics
+   * @returns {NodeCache.Stats} Cache usage statistics
+   */
+  public getStats(): NodeCache.Stats {
+    return this.cache.stats;
   }
 }
 
