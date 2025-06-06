@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import winston from 'winston';
+import * as winston from 'winston';
 import { HttpErrorCode } from './http-error-codes';
 
 /**
