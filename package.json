@@ -37,7 +37,14 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -45,7 +52,7 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env", 
+      "@babel/preset-env",
       "@babel/preset-typescript"
     ]
   }
