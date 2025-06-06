@@ -2,10 +2,11 @@
   "name": "coingecko-mock-api",
   "version": "1.0.0",
   "description": "Mock implementation of CoinGecko API",
+  "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest watch", 
-    "test:coverage": "vitest run --coverage"
+    "test": "node --experimental-vm-modules node_modules/vitest/vitest.js run",
+    "test:watch": "node --experimental-vm-modules node_modules/vitest/vitest.js watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/vitest/vitest.js run --coverage"
   },
   "dependencies": {
     "express": "^4.21.2",
