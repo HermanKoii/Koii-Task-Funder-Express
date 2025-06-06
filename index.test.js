@@ -1,7 +1,6 @@
-const express = require('express');
-const request = require('supertest');
-const crypto = require('crypto');
-const { describe, it, expect, beforeAll, beforeEach, afterEach } = require('vitest');
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import request from 'supertest';
+import crypto from 'crypto';
 
 // Mock the external dependencies
 vi.mock('@_koii/create-task-cli', () => ({
