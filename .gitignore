@@ -1,8 +1,15 @@
 node_modules/
 dist/
 .env
+<<<<<<< HEAD
 __pycache__
 .DS_Store
 *.log
 coverage/
 .vitest
+=======
+__pycache__/
+.vitest-coverage/
+*.log
+.DS_Store
+>>>>>>> pr-8-Merango-Koii-Task-Funder-Express
