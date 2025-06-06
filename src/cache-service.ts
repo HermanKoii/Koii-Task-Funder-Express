@@ -1,4 +1,5 @@
 import NodeCache from 'node-cache';
+import { CacheConfig, createCache } from './config/cache';
 
 /**
  * CacheService provides a centralized, type-safe caching mechanism
@@ -10,22 +11,18 @@ class CacheService {
 
   /**
    * Private constructor to enforce singleton pattern
-   * @param {Object} options - Optional cache configuration
+   * @param {CacheConfig} options - Optional cache configuration
    */
-  private constructor(options: NodeCache.Options = {}) {
-    this.cache = new NodeCache({
-      stdTTL: options.stdTTL || 600, // Default 10 minutes
-      checkperiod: options.checkperiod || 120, // Default 2 minutes
-      ...options
-    });
+  private constructor(options: CacheConfig = {}) {
+    this.cache = createCache(options);
   }
 
   /**
    * Get singleton instance of CacheService
-   * @param {Object} options - Optional cache configuration
+   * @param {CacheConfig} options - Optional cache configuration
    * @returns {CacheService} Singleton cache service instance
    */
-  public static getInstance(options: NodeCache.Options = {}): CacheService {
+  public static getInstance(options: CacheConfig = {}): CacheService {
     if (!CacheService.instance) {
       CacheService.instance = new CacheService(options);
     }
