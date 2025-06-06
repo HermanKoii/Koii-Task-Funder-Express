@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import winston from 'winston';
+import { ValidationError } from '../types/error';
 
 /**
  * Enum representing standard HTTP error codes
@@ -32,16 +33,24 @@ export class ErrorResponseUtil {
   private logger: winston.Logger;
 
   constructor() {
-    // Initialize Winston logger
+    // Initialize Winston logger with improved configuration
     this.logger = winston.createLogger({
-      level: 'error',
+      level: process.env.LOG_LEVEL || 'error',
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.splat(),
         winston.format.json()
       ),
       transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log' })
+        new winston.transports.Console({
+          format: winston.format.simple()
+        }),
+        new winston.transports.File({ 
+          filename: 'logs/error.log',
+          maxsize: 5242880, // 5MB
+          maxFiles: 5
+        })
       ]
     });
   }
@@ -68,10 +77,11 @@ export class ErrorResponseUtil {
       }
     };
 
-    // Log the error
+    // Log the error with additional context
     this.logger.error(message, { 
       code: errorCode, 
-      details 
+      details,
+      ...(details instanceof Error && { stack: details.stack })
     });
 
     return res.status(errorCode).json(errorResponse);
@@ -80,17 +90,26 @@ export class ErrorResponseUtil {
   /**
    * Create a validation error response
    * @param res Express response object
-   * @param validationErrors Validation error details
+   * @param error Validation error or error details
    */
   public sendValidationError(
     res: Response, 
-    validationErrors: Record<string, unknown>
+    error: ValidationError | Record<string, unknown>
   ): Response {
+    if (error instanceof ValidationError) {
+      return this.sendErrorResponse(
+        res, 
+        HttpErrorCode.BAD_REQUEST, 
+        error.message, 
+        (error as any).details
+      );
+    }
+
     return this.sendErrorResponse(
       res, 
       HttpErrorCode.BAD_REQUEST, 
       'Validation Error', 
-      validationErrors
+      error
     );
   }
 
