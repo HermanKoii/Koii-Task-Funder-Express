@@ -1,13 +1,19 @@
-import { describe, it, expect, vi } from 'vitest';
-import { ErrorResponseUtil, HttpErrorCode } from '../../src/utils/error-response';
-import { mockResponse } from '../__mocks__/express-mock';
+import { describe, it, expect } from '@jest/globals';
+import { HttpErrorCode, errorResponseUtil } from '../../src/utils/error-response';
+import { Response } from 'express';
+
+// Create a mock response object
+function mockResponse(): Partial<Response> {
+  return {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn().mockReturnThis()
+  };
+}
 
 describe('ErrorResponseUtil', () => {
-  const errorResponseUtil = new ErrorResponseUtil();
-
   describe('sendErrorResponse', () => {
-    it('should send a standardized error response', () => {
-      const mockRes = mockResponse();
+    it('should send a formatted error response', () => {
+      const mockRes = mockResponse() as Response;
       const errorCode = HttpErrorCode.BAD_REQUEST;
       const message = 'Test error message';
       const details = { field: 'test' };
@@ -28,8 +34,8 @@ describe('ErrorResponseUtil', () => {
 
   describe('sendValidationError', () => {
     it('should send a validation error response', () => {
-      const mockRes = mockResponse();
-      const validationErrors = { username: 'Invalid format' };
+      const mockRes = mockResponse() as Response;
+      const validationErrors = { name: 'required' };
 
       errorResponseUtil.sendValidationError(mockRes, validationErrors);
 
@@ -47,7 +53,7 @@ describe('ErrorResponseUtil', () => {
 
   describe('sendNotFoundError', () => {
     it('should send a not found error response', () => {
-      const mockRes = mockResponse();
+      const mockRes = mockResponse() as Response;
       const resourceName = 'User';
 
       errorResponseUtil.sendNotFoundError(mockRes, resourceName);
@@ -57,19 +63,9 @@ describe('ErrorResponseUtil', () => {
         success: false,
         error: {
           code: HttpErrorCode.NOT_FOUND,
-          message: 'User not found'
+          message: `${resourceName} not found`
         }
       });
     });
   });
 });
-
-// Create a mock for Express response
-import { Response } from 'express';
-
-export function mockResponse(): Partial<Response> {
-  return {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn().mockReturnThis()
-  };
-}
