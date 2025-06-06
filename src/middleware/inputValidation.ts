@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const query = req.query ?? {};
-
-  const { ids, vs_currencies } = query;
+  // Use optional chaining to safely access query
+  const ids = req?.query?.ids;
+  const vs_currencies = req?.query?.vs_currencies;
 
   if (!ids) {
     return res.status(400).json({ error: 'Missing coin ID parameter' });
@@ -17,9 +17,8 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const query = req.query ?? {};
-
-  const { order, per_page } = query;
+  const order = req?.query?.order;
+  const per_page = req?.query?.per_page;
 
   if (order && !['market_cap_desc', 'market_cap_asc'].includes(order as string)) {
     return res.status(400).json({ error: 'Invalid order parameter' });
