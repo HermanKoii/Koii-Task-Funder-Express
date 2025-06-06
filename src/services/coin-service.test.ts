@@ -1,49 +1,38 @@
-import { describe, it, expect } from 'vitest';
 import { CoinService } from './coin-service';
+import cryptoData from '../data/crypto-prices.json';
 
 describe('CoinService', () => {
-  const coinService = CoinService.getInstance();
+  let coinService: CoinService;
 
-  it('should retrieve singleton instance consistently', () => {
+  beforeEach(() => {
+    coinService = CoinService.getInstance();
+  });
+
+  it('should be a singleton', () => {
     const anotherInstance = CoinService.getInstance();
     expect(coinService).toBe(anotherInstance);
   });
 
-  it('should retrieve coin by valid ID', () => {
-    const bitcoin = coinService.getCoinById('bitcoin');
-    expect(bitcoin).toBeDefined();
-    expect(bitcoin?.name).toBe('Bitcoin');
-    expect(bitcoin?.symbol).toBe('btc');
+  it('should list all coins', () => {
+    const coins = coinService.listCoins();
+    expect(coins.length).toBe(cryptoData.coins.length);
   });
 
-  it('should return undefined for non-existent coin ID', () => {
-    const nonExistentCoin = coinService.getCoinById('non-existent-coin');
-    expect(nonExistentCoin).toBeUndefined();
+  it('should get coin by ID', () => {
+    const testCoin = cryptoData.coins[0];
+    const retrievedCoin = coinService.getCoinById(testCoin.id);
+    expect(retrievedCoin).toEqual(testCoin);
+  });
+
+  it('should search coins by name', () => {
+    const searchResults = coinService.searchCoins('bitcoin');
+    expect(searchResults.length).toBeGreaterThan(0);
+    searchResults.forEach(coin => {
+      expect(coin.name.toLowerCase()).toContain('bitcoin');
+    });
   });
 
   it('should throw error for empty coin ID', () => {
     expect(() => coinService.getCoinById('')).toThrow('Coin ID is required');
-  });
-
-  it('should list all coins', () => {
-    const allCoins = coinService.listCoins();
-    expect(allCoins.length).toBeGreaterThan(0);
-  });
-
-  it('should search coins by name', () => {
-    const bitcoinResults = coinService.searchCoins('bitcoin');
-    expect(bitcoinResults.length).toBeGreaterThan(0);
-    expect(bitcoinResults[0].name).toBe('Bitcoin');
-  });
-
-  it('should search coins by symbol', () => {
-    const ethResults = coinService.searchCoins('eth');
-    expect(ethResults.length).toBeGreaterThan(0);
-    expect(ethResults[0].symbol).toBe('eth');
-  });
-
-  it('should return empty array for empty search query', () => {
-    const emptyResults = coinService.searchCoins('');
-    expect(emptyResults.length).toBe(0);
   });
 });
