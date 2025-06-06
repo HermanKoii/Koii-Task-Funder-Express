@@ -2,6 +2,7 @@ import { describe, it, expect } from '@jest/globals';
 import { Response } from 'express';
 import { errorHandler } from '../src/middleware/errorHandler';
 import { ApiError } from '../src/types/error';
+import { HttpErrorCode } from '../src/utils/error-response';
 
 // Create a mock response object
 function mockResponse(): Partial<Response> {
@@ -19,10 +20,13 @@ describe('Error Handler Middleware', () => {
 
     errorHandler(genericError, {} as any, mockRes, mockNext);
 
-    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.status).toHaveBeenCalledWith(HttpErrorCode.INTERNAL_SERVER_ERROR);
     expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-      status: 'error',
-      message: 'An unexpected error occurred'
+      success: false,
+      error: expect.objectContaining({
+        message: 'An unexpected error occurred',
+        code: HttpErrorCode.INTERNAL_SERVER_ERROR
+      })
     }));
   });
 
@@ -35,8 +39,11 @@ describe('Error Handler Middleware', () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-      status: 'error',
-      message: 'Custom API error'
+      success: false,
+      error: expect.objectContaining({
+        message: 'Custom API error',
+        code: 400
+      })
     }));
   });
 });
