@@ -32,6 +32,7 @@ export function errorHandler(
   console.error(err.stack);
   res.status(500).json({
     error: 'Internal Server Error',
-    message: err.message
+    message: err.message,
+    timestamp: new Date().toISOString()
   });
 }
