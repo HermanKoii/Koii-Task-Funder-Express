@@ -1,33 +1,33 @@
 const express = require('express');
 const request = require('supertest');
 const crypto = require('crypto');
+const { describe, it, expect, beforeAll, beforeEach, afterEach } = require('vitest');
+const { vi } = require('vitest');
 
 // Mock the external dependencies
-jest.mock('@_koii/create-task-cli', () => {
+vi.mock('@_koii/create-task-cli', () => {
   return {
-    FundTask: jest.fn().mockResolvedValue(true),
-    KPLEstablishConnection: jest.fn().mockResolvedValue(true),
-    KPLFundTask: jest.fn().mockResolvedValue(true),
-    getTaskStateInfo: jest.fn().mockResolvedValue({
+    FundTask: vi.fn().mockResolvedValue(true),
+    KPLEstablishConnection: vi.fn().mockResolvedValue(true),
+    KPLFundTask: vi.fn().mockResolvedValue(true),
+    getTaskStateInfo: vi.fn().mockResolvedValue({
       stake_pot_account: 'mockStakePotAccount',
       token_type: null
     }),
-    establishConnection: jest.fn().mockResolvedValue(true),
-    checkProgram: jest.fn().mockResolvedValue(true),
-    KPLCheckProgram: jest.fn().mockResolvedValue(true)
+    establishConnection: vi.fn().mockResolvedValue(true),
+    checkProgram: vi.fn().mockResolvedValue(true),
+    KPLCheckProgram: vi.fn().mockResolvedValue(true)
   };
 });
 
-jest.mock('@_koii/web3.js', () => {
+vi.mock('@_koii/web3.js', () => {
   return {
-    PublicKey: jest.fn().mockImplementation((key) => ({
+    PublicKey: vi.fn().mockImplementation((key) => ({
       toString: () => key
     })),
-    Connection: jest.fn().mockImplementation(() => ({
-      // Mock connection methods if needed
-    })),
+    Connection: vi.fn().mockImplementation(() => ({})),
     Keypair: {
-      fromSecretKey: jest.fn().mockReturnValue({
+      fromSecretKey: vi.fn().mockReturnValue({
         publicKey: 'mockPublicKey',
         secretKey: new Uint8Array([1,2,3,4])
       })
@@ -35,9 +35,9 @@ jest.mock('@_koii/web3.js', () => {
   };
 });
 
-jest.mock('axios', () => {
+vi.mock('axios', () => {
   return {
-    post: jest.fn().mockResolvedValue({})
+    post: vi.fn().mockResolvedValue({})
   };
 });
 
@@ -59,7 +59,7 @@ describe('Task Funding Service', () => {
 
   afterEach(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function createSlackSignature(body, secret, timestamp) {
