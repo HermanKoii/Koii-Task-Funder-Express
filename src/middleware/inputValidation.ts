@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
+  // Safely handle undefined req
+  if (!req || !req.query) {
+    return res.status(400).json({
+      error: 'Invalid request parameters'
+    });
+  }
+
   const { ids, vs_currencies } = req.query;
 
   if (!ids || !vs_currencies) {
@@ -13,16 +20,19 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  // Add validation logic for coin list parameters
-  next();
+  // Default implementation passes through
+  if (next && typeof next === 'function') {
+    next();
+  }
 }
 
-export function validateCoin(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params;
+export function validateCoinDetailsParams(req: Request, res: Response, next: NextFunction) {
+  const { id } = req.params;
 
-  if (!coinId) {
+  // Basic coin ID validation 
+  if (!id || !/^[a-z0-9-]+$/.test(id)) {
     return res.status(400).json({
-      error: 'Missing coin ID'
+      error: 'Invalid coin ID'
     });
   }
 
