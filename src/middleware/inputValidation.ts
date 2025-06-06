@@ -19,7 +19,11 @@ export function validateCoinDetailsParams(): ((req: Request, res: Response, next
         return res.status(400).json({ error: 'Invalid coin ID format' });
       }
 
-      // Always call next even if validation passes
+      next();
+    },
+    // Additional validation steps can be added here
+    (req: Request, res: Response, next: NextFunction) => {
+      // Example of an additional validation step
       next();
     }
   ];
@@ -32,18 +36,22 @@ export function validateCoinDetailsParams(): ((req: Request, res: Response, next
 export function validateCoinPriceParams(): ((req: Request, res: Response, next: NextFunction) => void)[] {
   return [
     (req: Request, res: Response, next: NextFunction) => {
-      const params = req.params || {};
-      const { coinId } = params;
+      const query = req.query || {};
+      const { ids, vs_currencies } = query;
       
-      if (!coinId) {
-        return res.status(400).json({ error: 'Coin ID is required' });
+      if (!ids || typeof ids !== 'string') {
+        return res.status(400).json({ error: 'Invalid or missing coin ID' });
       }
 
-      if (typeof coinId !== 'string') {
-        return res.status(400).json({ error: 'Invalid coin ID format' });
+      if (!vs_currencies || typeof vs_currencies !== 'string') {
+        return res.status(400).json({ error: 'Invalid or missing currency' });
       }
 
-      // Always call next even if validation passes
+      next();
+    },
+    // Additional validation steps can be added here
+    (req: Request, res: Response, next: NextFunction) => {
+      // Example of an additional validation step
       next();
     }
   ];
@@ -70,7 +78,11 @@ export function validateCoinListParams(): ((req: Request, res: Response, next: N
         return res.status(400).json({ error: 'Invalid limit. Must be between 1 and 100' });
       }
 
-      // Always call next even if validation passes
+      next();
+    },
+    // Additional validation steps can be added here
+    (req: Request, res: Response, next: NextFunction) => {
+      // Example of an additional validation step
       next();
     }
   ];
@@ -94,7 +106,11 @@ export function validateCoinData(): ((req: Request, res: Response, next: NextFun
         return res.status(400).json({ error: 'Coin must have id, name, and symbol' });
       }
 
-      // Always call next even if validation passes
+      next();
+    },
+    // Additional validation steps can be added here
+    (req: Request, res: Response, next: NextFunction) => {
+      // Example of an additional validation step
       next();
     }
   ];
