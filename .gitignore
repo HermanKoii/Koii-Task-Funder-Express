@@ -2,7 +2,15 @@ node_modules/
 dist/
 .env
 __pycache__/
+<<<<<<< HEAD
 .vitest
 coverage/
 *.log
 .DS_Store
+=======
+*.log
+.DS_Store
+coverage/
+*.test.js
+*.test.ts
+>>>>>>> pr-2-ranjhayhero-Koii-Task-Funder-Express
