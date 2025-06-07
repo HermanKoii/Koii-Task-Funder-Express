@@ -8,21 +8,13 @@ export const spiderManHandler = (req, res) => {
     // Normalize path to handle various route variations
     const requestPath = req.path.toLowerCase().replace(/[-/]/g, '');
     
-    // Define all acceptable variations and the full route
-    const acceptedPaths = ['spiderman', 'spider', 'spiderman', 'spider-man'];
+    // Define all acceptable variations
+    const exactMatch = 'spiderman';
+    const variations = ['spider', 'spiderman', 'spider-man'];
     
-    // Check if the path matches exactly
-    if (requestPath === 'spiderman') {
+    // Check if the path matches exactly or is a variation
+    if (requestPath === exactMatch || variations.includes(requestPath)) {
       // Return comprehensive Spider-Man details
-      res.status(200).json({
-        name: 'Spider-Man',
-        description: 'Friendly neighborhood superhero with spider-like abilities',
-        realName: 'Peter Parker',
-        powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength'],
-        firstAppearance: 'Amazing Fantasy #15'
-      });
-    } else if (acceptedPaths.includes(requestPath)) {
-      // Return slightly modified details for variations
       res.status(200).json({
         name: 'Spider-Man',
         description: 'Friendly neighborhood superhero with spider-like abilities',
