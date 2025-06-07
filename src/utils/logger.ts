@@ -1,12 +1,8 @@
-import winston from 'winston';
-import path from 'path';
-import fs from 'fs';
+import _winston from 'winston';
 
-// Create logs directory
-const logsDir = path.join(process.cwd(), 'logs');
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir);
-}
+// Capture the format methods to ensure compatibility
+const { format } = _winston;
+const { combine, timestamp, errors, splat, json, colorize, simple } = format;
 
 // Define log levels
 const levels = {
@@ -17,35 +13,35 @@ const levels = {
 };
 
 // Create a custom logger configuration
-const logger = winston.createLogger({
+const logger = _winston.createLogger({
   levels,
   level: process.env.LOG_LEVEL || 'info',
-  format: winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.errors({ stack: true }),
-    winston.format.splat(),
-    winston.format.json()
+  format: combine(
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    errors({ stack: true }),
+    splat(),
+    json()
   ),
   transports: [
     // Console logging
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize({ all: true }),
-        winston.format.simple()
+    new _winston.transports.Console({
+      format: combine(
+        colorize({ all: true }),
+        simple()
       )
     }),
     
     // File logging for errors
-    new winston.transports.File({
-      filename: path.join(logsDir, 'error.log'),
+    new _winston.transports.File({
+      filename: 'logs/error.log',
       level: 'error',
       maxsize: 5 * 1024 * 1024, // 5MB max file size
       maxFiles: 5
     }),
     
     // File logging for combined logs
-    new winston.transports.File({
-      filename: path.join(logsDir, 'combined.log'),
+    new _winston.transports.File({
+      filename: 'logs/combined.log',
       maxsize: 5 * 1024 * 1024, // 5MB max file size
       maxFiles: 5
     })
@@ -81,18 +77,4 @@ export const handleError = (error: Error, context?: any) => {
   console.error('Unhandled Error:', error.message, context);
 };
 
-// Performance logging utility
-export const measurePerformance = (label: string, fn: () => any) => {
-  const start = performance.now();
-  const result = fn();
-  const end = performance.now();
-  
-  logInfo(`Performance: ${label}`, {
-    duration: end - start,
-    timestamp: new Date().toISOString()
-  });
-  
-  return result;
-};
-
-export { logger as default };
+export default logger;
