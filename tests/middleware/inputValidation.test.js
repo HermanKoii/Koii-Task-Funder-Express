@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'jest-cucumber';
+import { describe, it, expect } from '@jest/globals';
 
 describe('Input Validation Middleware', () => {
     it('should validate input correctly', () => {
