@@ -8,6 +8,7 @@ interface RawCoinData {
   id: string;
   symbol: string;
   name: string;
+  market_cap?: number;
 }
 
 /**
@@ -17,6 +18,7 @@ interface TransformedCoin {
   id: string;
   symbol: string;
   name: string;
+  market_cap?: number;
 }
 
 /**
@@ -36,8 +38,9 @@ export function transformCoinsList(filePath?: string): TransformedCoin[] {
     // Transform the data
     return coinData.map(coin => ({
       id: coin.id,
-      symbol: coin.symbol,
-      name: coin.name
+      symbol: coin.symbol.toLowerCase(),
+      name: coin.name,
+      market_cap: coin.market_cap || 0
     }));
   } catch (error) {
     // Handle potential errors
@@ -45,7 +48,7 @@ export function transformCoinsList(filePath?: string): TransformedCoin[] {
       if (error instanceof SyntaxError) {
         throw new Error('Invalid JSON format in crypto-prices.json');
       }
-      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      if ('code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
         throw new Error(`Coins data file not found at ${resolvedPath}`);
       }
     }

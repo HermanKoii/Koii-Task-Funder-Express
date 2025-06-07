@@ -12,12 +12,14 @@ describe('Coins List Transformer', () => {
     expect(transformedCoins[0]).toEqual({
       id: 'bitcoin',
       symbol: 'btc',
-      name: 'Bitcoin'
+      name: 'Bitcoin',
+      market_cap: 0
     });
     expect(transformedCoins[1]).toEqual({
       id: 'ethereum',
       symbol: 'eth',
-      name: 'Ethereum'
+      name: 'Ethereum',
+      market_cap: 0
     });
   });
 
