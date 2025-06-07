@@ -7,12 +7,13 @@ import { ValidationError } from '../types/error';
 export const validateCoinInput = (req: Request, res: Response, next: NextFunction) => {
   const { coinId } = req.params;
 
+  // First check if coinId exists
   if (!coinId) {
     throw new ValidationError('Coin ID is required');
   }
 
-  // Basic validation for coin ID format
-  if (typeof coinId !== 'string' || coinId.trim() === '') {
+  // Then check for invalid format
+  if (coinId.trim() === '') {
     throw new ValidationError('Invalid coin ID format');
   }
 
