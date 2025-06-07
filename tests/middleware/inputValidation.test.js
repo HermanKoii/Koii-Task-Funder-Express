@@ -1,4 +1,8 @@
-const { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } = require('../../src/middleware/inputValidation');
+const { 
+  validateCoinPriceParams, 
+  validateCoinListParams, 
+  validateCoinDetailsParams 
+} = require('../../src/middleware/inputValidation');
 
 // Mock Express request and response
 const createMockReqRes = (query = {}, params = {}) => {
