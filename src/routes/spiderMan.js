@@ -8,10 +8,9 @@ export const spiderManHandler = (req, res) => {
     // Return a comprehensive representation of Spider-Man
     res.status(200).json({
       name: 'Spider-Man',
-      description: 'Friendly neighborhood superhero with spider-like abilities',
       realName: 'Peter Parker',
-      powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength'],
-      firstAppearance: 'Amazing Fantasy #15'
+      firstAppearance: 'Amazing Fantasy #15',
+      powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength']
     });
   } catch (error) {
     // Error handling for unexpected issues
