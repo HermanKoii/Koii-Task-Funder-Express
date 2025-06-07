@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  // Handle cases where req or params might be undefined
+  // Ensure req is not undefined
+  if (!req) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+
   const params = req.params || {};
   const { coinId, currency } = params;
 
@@ -18,7 +22,11 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  // Handle cases where req or query might be undefined
+  // Ensure req is not undefined
+  if (!req) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+
   const query = req.query || {};
   const { limit } = query;
 
@@ -31,7 +39,11 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
 
 export function validateCoinDetailsParams(options = {}) {
   return (req: Request, res: Response, next: NextFunction) => {
-    // Handle cases where req or params might be undefined
+    // Ensure req is not undefined
+    if (!req) {
+      return res.status(400).json({ error: 'Invalid request' });
+    }
+
     const params = req.params || {};
     const { id } = params;
 
