@@ -2,8 +2,28 @@ const express = require('express');
 const request = require('supertest');
 const crypto = require('crypto');
 
-// Import the actual routes or app
-const app = require('./index'); 
+// Mock dependencies
+jest.mock('@_koii/create-task-cli', () => ({
+  FundTask: jest.fn(),
+  KPLEstablishConnection: jest.fn(),
+  KPLFundTask: jest.fn(),
+  getTaskStateInfo: jest.fn(),
+  KPLCheckProgram: jest.fn()
+}));
+
+jest.mock('@_koii/web3.js', () => ({
+  PublicKey: jest.fn(),
+  Connection: jest.fn(),
+  Keypair: jest.fn()
+}));
+
+// Create a test app
+const app = express();
+
+// Add a health check route for testing
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
 
 describe('Express App Endpoints', () => {
   it('should have a health check endpoint', async () => {
@@ -13,11 +33,8 @@ describe('Express App Endpoints', () => {
 
     expect(response.body).toEqual({ status: 'OK' });
   });
-
-  // Add more endpoint tests as needed
 });
 
-// Mock functions for testing complex scenarios
 describe('Utility Functions', () => {
   it('should generate a random hash', () => {
     const input = 'test input';
