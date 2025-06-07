@@ -1,6 +1,6 @@
-import express from 'express';
-import request from 'supertest';
-import heroRoutes from '../src/routes/heroRoutes.js';
+const express = require('express');
+const request = require('supertest');
+const heroRoutes = require('../src/routes/heroRoutes');
 
 describe('Hero Routes', () => {
   let app;
