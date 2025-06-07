@@ -7,8 +7,14 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
-    "vitest": "latest"
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.6",
+    "@types/supertest": "^2.0.11",
+    "supertest": "^6.1.6",
+    "vitest": "^0.23.4"
   }
 }
