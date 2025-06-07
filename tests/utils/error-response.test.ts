@@ -1,3 +1,4 @@
+import * as express from 'express';
 import { ErrorResponseUtil, HttpErrorCode } from '../../src/utils/error-response';
 import { Response } from 'express';
 
