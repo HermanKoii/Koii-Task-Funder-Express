@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'jest-cucumber';
+import { describe, it, expect } from '@jest/globals';
 
 describe('Crypto Prices Mock', () => {
     it('should have valid crypto price data', () => {
