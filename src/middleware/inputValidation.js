@@ -28,26 +28,19 @@ export function validateCoinId(req, res, next) {
 
 /**
  * Validate coin price parameters
- * @returns {Array} Array of middleware functions
+ * @returns {Function[]} Array of middleware functions
  */
 export function validateCoinPriceParams() {
   return [
     (req, res, next) => {
       const { vs_currencies, ids } = req.query;
 
-      // Ensure next is always called
-      if (vs_currencies && (!ids || /^[a-z0-9-_,]+$/i.test(ids))) {
-        next();
-        return;
-      }
-
-      // Rejection cases
       if (!vs_currencies) {
         res.status(400).json({
           error: 'Invalid Input',
           message: 'vs_currencies parameter is required'
         });
-        next('route');  // Prevent further middleware execution
+        next('route');
         return;
       }
 
@@ -56,40 +49,43 @@ export function validateCoinPriceParams() {
           error: 'Invalid Input',
           message: 'ids parameter contains invalid characters'
         });
-        next('route');  // Prevent further middleware execution
+        next('route');
         return;
       }
+
+      // Ensure next is always called
+      next();
     }
   ];
 }
 
 /**
  * Validate coin list parameters
- * @returns {Array} Array of middleware functions
+ * @returns {Function[]} Array of middleware functions
  */
 export function validateCoinListParams() {
   return [
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      // Ensure next is always called
-      if (!include_platform || typeof include_platform === 'string') {
-        next();
+      if (include_platform && typeof include_platform !== 'string') {
+        res.status(400).json({
+          error: 'Invalid Input',
+          message: 'include_platform must be a string'
+        });
+        next('route');
         return;
       }
 
-      res.status(400).json({
-        error: 'Invalid Input',
-        message: 'include_platform must be a string'
-      });
-      next('route');  // Prevent further middleware execution
+      // Ensure next is always called
+      next();
     }
   ];
 }
 
 /**
  * Validate coin details parameters
- * @returns {Array} Array of middleware functions
+ * @returns {Function[]} Array of middleware functions
  */
 export function validateCoinDetailsParams() {
   return [validateCoinId];
