@@ -1,12 +1,26 @@
 {
   "bitcoin": {
-    "price": 50000.00,
-    "marketCap": 1000000000000,
+    "id": "bitcoin",
+    "symbol": "btc",
+    "name": "Bitcoin",
+    "current_price": 50000.00,
+    "market_cap": 1000000000000,
     "volume": 25000000000
   },
   "ethereum": {
-    "price": 3000.00,
-    "marketCap": 400000000000,
+    "id": "ethereum",
+    "symbol": "eth",
+    "name": "Ethereum",
+    "current_price": 3000.00,
+    "market_cap": 400000000000,
     "volume": 15000000000
+  },
+  "dogecoin": {
+    "id": "dogecoin",
+    "symbol": "doge",
+    "name": "Dogecoin",
+    "current_price": 0.25,
+    "market_cap": 35000000000,
+    "volume": 2000000000
   }
 }
