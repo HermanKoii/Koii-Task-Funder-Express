@@ -9,7 +9,10 @@ type ReqType = Request & {
  * Validate coin list query parameters
  */
 export const validateCoinListParams = (req: ReqType, res: Response, next: NextFunction) => {
-  const query = req.query || {};
+  // Ensure query is an object
+  const query = typeof req.query === 'object' && req.query !== null 
+    ? req.query 
+    : {};
 
   // Validate order parameter
   if (query.order && typeof query.order !== 'string') {
@@ -41,23 +44,29 @@ export const validateCoinListParams = (req: ReqType, res: Response, next: NextFu
 export const validateCoinPriceParams = () => {
   return {
     validate: (req: ReqType, res: Response, next: NextFunction) => {
-      const query = req.query || {};
+      // Ensure query is an object
+      const query = typeof req.query === 'object' && req.query !== null 
+        ? req.query 
+        : {};
 
       // Validate ids parameter
       if (!query.ids || typeof query.ids !== 'string' || !/^[a-z0-9,]+$/i.test(query.ids)) {
-        return res.status(400).json({ error: 'Invalid coin ID(s)' });
+        res.status(400);
+        return res.json({ error: 'Invalid coin ID(s)' });
       }
 
       // Validate vs_currency parameter
       if (!query.vs_currency || typeof query.vs_currency !== 'string') {
-        return res.status(400).json({ error: 'Invalid vs_currency' });
+        res.status(400);
+        return res.json({ error: 'Invalid vs_currency' });
       }
 
       // Validate days parameter
       if (query.days) {
         const daysNum = Number(query.days);
         if (isNaN(daysNum) || daysNum < 1) {
-          return res.status(400).json({ error: 'days must be a positive number' });
+          res.status(400);
+          return res.json({ error: 'days must be a positive number' });
         }
       }
 
@@ -70,7 +79,10 @@ export const validateCoinPriceParams = () => {
  * Validate specific coin details parameters
  */
 export const validateCoinDetailsParams = (req: ReqType, res: Response, next: NextFunction) => {
-  const params = req.params || {};
+  // Ensure params is an object
+  const params = typeof req.params === 'object' && req.params !== null 
+    ? req.params 
+    : {};
 
   if (!params.id || typeof params.id !== 'string') {
     return res.status(400).json({ error: 'Invalid coin ID' });
