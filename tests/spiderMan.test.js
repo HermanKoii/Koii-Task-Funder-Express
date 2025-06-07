@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import app from '../src/app'; // Corrected import path
+import app from '../index.js';
 
 describe('Spider-Man Route', () => {
   it('should return Spider-Man details', async () => {
