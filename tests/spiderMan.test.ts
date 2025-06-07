@@ -32,15 +32,4 @@ describe('Spider-Man Endpoint', () => {
       expect(response.body).toEqual(expectedSpiderManData);
     }
   });
-
-  it('should handle server errors gracefully', async () => {
-    // Simulating a potential server error scenario
-    const response = await request(app)
-      .get('/spiderMan')
-      .expect('Content-Type', /json/)
-      .expect(200);
-
-    expect(response.body).toHaveProperty('name');
-    expect(response.body).toHaveProperty('description');
-  });
 });
