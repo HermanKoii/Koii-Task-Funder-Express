@@ -4,21 +4,23 @@ const validateCoinPriceParams = () => {
     (req, res, next) => {
       const { ids } = req.query;
 
-      // Basic validation for cryptocurrency IDs
+      // First validation for cryptocurrency IDs
       if (!ids || !/^[a-z0-9,-]+$/i.test(ids)) {
         return res.status(400).json({ error: 'Invalid coin IDs' });
       }
 
+      // Call next to move to the next middleware
       next();
     },
     (req, res, next) => {
       const { vs_currencies } = req.query;
 
-      // Basic validation for versus currencies
+      // Second validation for versus currencies
       if (!vs_currencies || !/^[a-z0-9,-]+$/i.test(vs_currencies)) {
         return res.status(400).json({ error: 'Invalid versus currencies' });
       }
 
+      // Call next to complete validation
       next();
     }
   ];
@@ -29,11 +31,12 @@ const validateCoinListParams = () => {
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      // Optional validation for include_platform
+      // Validation for include_platform
       if (include_platform && !['true', 'false'].includes(include_platform)) {
         return res.status(400).json({ error: 'Invalid include_platform value' });
       }
 
+      // Complete validation
       next();
     }
   ];
@@ -44,11 +47,12 @@ const validateCoinDetailsParams = () => {
     (req, res, next) => {
       const { id } = req.params;
 
-      // Basic validation for coin ID
+      // Validation for coin ID
       if (!id || !/^[a-z0-9-]+$/i.test(id)) {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
+      // Complete validation
       next();
     }
   ];
