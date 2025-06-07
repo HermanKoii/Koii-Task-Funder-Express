@@ -4,7 +4,9 @@ import { Request, Response, NextFunction } from 'express';
  * Validate coin price parameters
  */
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coin, currency } = req.params;
+  // Provide default empty object if req is undefined
+  const params = req?.params || {};
+  const { coin, currency } = params;
 
   if (!coin || !currency) {
     return res.status(400).json({ error: 'Coin and currency are required' });
@@ -22,7 +24,9 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
  * Validate coin list parameters
  */
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { limit, offset } = req.query;
+  // Provide default empty object if req is undefined
+  const query = req?.query || {};
+  const { limit, offset } = query;
 
   if (limit && (isNaN(Number(limit)) || Number(limit) <= 0)) {
     return res.status(400).json({ error: 'Invalid limit parameter' });
@@ -36,14 +40,27 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
 }
 
 /**
- * Validate a specific coin
+ * Validate coin details parameters
  */
-export function validateCoin(req: Request, res: Response, next: NextFunction) {
-  const { coin } = req.params;
+export function validateCoinDetailsParams(params: { id?: string } = {}) {
+  const { id } = params;
 
-  if (!coin || coin.trim() === '') {
-    return res.status(400).json({ error: 'Coin identifier is required' });
-  }
+  return {
+    validateId: (req: Request, res: Response, next: NextFunction) => {
+      // Provide default empty object if req is undefined
+      const reqParams = req?.params || {};
+      const coinId = reqParams.id || id;
 
-  next();
+      if (!coinId || coinId.trim() === '') {
+        return res.status(400).json({ error: 'Coin identifier is required' });
+      }
+
+      // Optional: Add more specific validation (e.g., allowed characters)
+      if (!/^[a-z0-9-]+$/i.test(coinId)) {
+        return res.status(400).json({ error: 'Invalid coin identifier' });
+      }
+
+      next();
+    }
+  };
 }
