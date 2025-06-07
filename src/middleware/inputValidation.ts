@@ -6,6 +6,15 @@ import { errorResponseUtil } from '../utils/error-response';
 const SUPPORTED_COINS = ['bitcoin', 'ethereum', 'dogecoin', 'cardano'];
 
 function validateCoinIds(ids: string[], res?: Response): void {
+  if (!ids || ids.length === 0) {
+    if (res) {
+      errorResponseUtil.sendValidationError(res, { error: 'No coin IDs provided' });
+    } else {
+      throw new ValidationError('No coin IDs provided');
+    }
+    return;
+  }
+
   const invalidCoins = ids.filter(id => !SUPPORTED_COINS.includes(id.toLowerCase()));
   
   if (invalidCoins.length > 0) {
@@ -22,7 +31,7 @@ function validateCoinIds(ids: string[], res?: Response): void {
 /**
  * Validate coin price query parameters
  */
-export function validateCoinPriceParams(validateFunc?: (req: Request) => void) {
+export function validateCoinPriceParams() {
   return {
     validateIds: (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -34,10 +43,6 @@ export function validateCoinPriceParams(validateFunc?: (req: Request) => void) {
         
         const coinIds = ids.split(',').map(id => id.trim());
         validateCoinIds(coinIds, res);
-
-        if (validateFunc) {
-          validateFunc(req);
-        }
         
         next();
       } catch (error) {
@@ -50,17 +55,13 @@ export function validateCoinPriceParams(validateFunc?: (req: Request) => void) {
 /**
  * Validate coin list query parameters
  */
-export function validateCoinListParams(validateFunc?: (req: Request) => void) {
+export function validateCoinListParams() {
   return {
     validateIncludePlatform: (req: Request, res: Response, next: NextFunction) => {
       try {
         const { include_platform } = req.query;
         if (include_platform && typeof include_platform !== 'string') {
           return errorResponseUtil.sendValidationError(res, { error: 'Invalid include_platform parameter' });
-        }
-
-        if (validateFunc) {
-          validateFunc(req);
         }
         
         next();
@@ -74,7 +75,7 @@ export function validateCoinListParams(validateFunc?: (req: Request) => void) {
 /**
  * Validate coin details parameters
  */
-export function validateCoinDetailsParams(validateFunc?: (req: Request) => void) {
+export function validateCoinDetailsParams() {
   return {
     validateId: (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -86,10 +87,6 @@ export function validateCoinDetailsParams(validateFunc?: (req: Request) => void)
         
         const coinId = id.trim().toLowerCase();
         validateCoinIds([coinId], res);
-
-        if (validateFunc) {
-          validateFunc(req);
-        }
         
         next();
       } catch (error) {
