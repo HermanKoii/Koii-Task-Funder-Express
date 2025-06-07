@@ -1,4 +1,4 @@
-export const heroes = {
+const heroes = {
   ironMan: {
     name: 'Tony Stark',
     heroName: 'Iron Man',
@@ -7,3 +7,5 @@ export const heroes = {
     powerLevel: 9
   }
 };
+
+module.exports = { heroes };
