@@ -3,14 +3,27 @@
     "id": "bitcoin",
     "symbol": "btc",
     "name": "Bitcoin",
-    "price": 50000,
+    "current_price": 50000,
+    "market_cap": 1000000000000,
+    "market_cap_rank": 1,
     "description": "The first decentralized cryptocurrency"
   },
   "ethereum": {
     "id": "ethereum", 
     "symbol": "eth",
     "name": "Ethereum",
-    "price": 3000,
+    "current_price": 3000,
+    "market_cap": 400000000000,
+    "market_cap_rank": 2,
     "description": "Blockchain platform with smart contract functionality"
+  },
+  "dogecoin": {
+    "id": "dogecoin",
+    "symbol": "doge",
+    "name": "Dogecoin",
+    "current_price": 0.1,
+    "market_cap": 15000000000,
+    "market_cap_rank": 10,
+    "description": "Meme cryptocurrency with community support"
   }
 }
