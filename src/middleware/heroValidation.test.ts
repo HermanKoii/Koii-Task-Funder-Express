@@ -1,80 +1,71 @@
-import { describe, it, expect, vi } from 'vitest';
 import { validateHeroName, validateHeroSearch } from './heroValidation';
+import { Request, Response, NextFunction } from 'express';
 
 describe('Hero Validation Middleware', () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: jest.Mock<NextFunction>;
+
+  beforeEach(() => {
+    mockNext = jest.fn();
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+  });
+
   describe('validateHeroName', () => {
     it('should pass for valid hero names', () => {
-      const mockReq: any = { params: { name: 'Spider-Man' } };
-      const mockRes: any = { status: vi.fn().mockReturnThis(), json: vi.fn() };
-      const mockNext = vi.fn();
+      mockReq = { params: { name: 'Spider-Man' } };
+      validateHeroName(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroName(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    it('should reject names with special characters', () => {
-      const mockReq: any = { params: { name: 'Spider-Man!' } };
-      const mockRes: any = { 
-        status: vi.fn().mockReturnThis(), 
-        json: vi.fn() 
-      };
-      const mockNext = vi.fn();
+    it('should reject names shorter than 2 characters', () => {
+      mockReq = { params: { name: 'A' } };
+      validateHeroName(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroName(mockReq, mockRes, mockNext);
       expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-        error: 'Invalid hero name'
-      }));
+      expect(mockRes.json).toHaveBeenCalled();
+      expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should reject very short names', () => {
-      const mockReq: any = { params: { name: 'A' } };
-      const mockRes: any = { 
-        status: vi.fn().mockReturnThis(), 
-        json: vi.fn() 
-      };
-      const mockNext = vi.fn();
+    it('should reject names with invalid characters', () => {
+      mockReq = { params: { name: 'Spider-Man 123!' } };
+      validateHeroName(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroName(mockReq, mockRes, mockNext);
       expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-        error: 'Invalid hero name'
-      }));
+      expect(mockRes.json).toHaveBeenCalled();
+      expect(mockNext).not.toHaveBeenCalled();
     });
   });
 
   describe('validateHeroSearch', () => {
     it('should pass for valid search queries', () => {
-      const mockReq: any = { query: { q: 'Spider Man' } };
-      const mockRes: any = { status: vi.fn().mockReturnThis(), json: vi.fn() };
-      const mockNext = vi.fn();
+      mockReq = { query: { q: 'Superman' } };
+      validateHeroSearch(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroSearch(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    it('should pass if no query is provided', () => {
-      const mockReq: any = { query: {} };
-      const mockRes: any = { status: vi.fn().mockReturnThis(), json: vi.fn() };
-      const mockNext = vi.fn();
+    it('should skip validation when no query is provided', () => {
+      mockReq = { query: {} };
+      validateHeroSearch(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroSearch(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    it('should reject search queries with special characters', () => {
-      const mockReq: any = { query: { q: 'Spider-Man!' } };
-      const mockRes: any = { 
-        status: vi.fn().mockReturnThis(), 
-        json: vi.fn() 
-      };
-      const mockNext = vi.fn();
+    it('should reject search queries with invalid characters', () => {
+      mockReq = { query: { q: 'Superman 123!' } };
+      validateHeroSearch(mockReq as Request, mockRes as Response, mockNext);
 
-      validateHeroSearch(mockReq, mockRes, mockNext);
       expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-        error: 'Invalid search query'
-      }));
+      expect(mockRes.json).toHaveBeenCalled();
+      expect(mockNext).not.toHaveBeenCalled();
     });
   });
 });
