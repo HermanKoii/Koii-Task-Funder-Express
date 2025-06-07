@@ -5,12 +5,26 @@
  */
 export const spiderManHandler = (req, res) => {
   try {
-    // Return a string representation of Spider-Man
-    res.status(200).json({
-      name: 'Spider-Man',
-      description: 'Friendly neighborhood superhero with spider-like abilities',
-      realName: 'Peter Parker'
-    });
+    // Normalize path to handle case variations
+    const requestPath = req.path.toLowerCase().replace(/[-/]/g, '');
+    
+    // Check if the path matches 'spiderman' in any case
+    if (['spiderman', '/spiderman'].includes(requestPath)) {
+      // Return comprehensive Spider-Man details
+      res.status(200).json({
+        name: 'Spider-Man',
+        description: 'Friendly neighborhood superhero with spider-like abilities',
+        realName: 'Peter Parker',
+        powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength'],
+        firstAppearance: 'Amazing Fantasy #15'
+      });
+    } else {
+      // If path doesn't match, return 404
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Spider-Man route not found'
+      });
+    }
   } catch (error) {
     // Error handling for unexpected issues
     res.status(500).json({
