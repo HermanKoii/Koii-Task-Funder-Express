@@ -1,1 +1,0 @@
-// This test file is deprecated. Use spiderMan.test.ts instead.
