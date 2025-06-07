@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { HeroDataService } from '../src/services/hero-data.service';
+import { HeroDataService } from '../src/services/hero-data.service.ts';
 
 describe('HeroDataService', () => {
   let heroService: HeroDataService;

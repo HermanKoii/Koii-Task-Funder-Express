@@ -7,6 +7,9 @@ const marketDataCache = MarketDataCache.getInstance();
 /**
  * Get market data for given coin IDs
  * Supports caching to improve performance
+ * @route GET /market-data
+ * @param {string} ids - Comma-separated list of coin IDs
+ * @param {string} vs_currencies - Target currency for conversion
  */
 router.get('/market-data', async (req: Request, res: Response) => {
   try {
@@ -19,8 +22,14 @@ router.get('/market-data', async (req: Request, res: Response) => {
       });
     }
 
+    // Normalize input to handle array and string inputs
+    const coinIds = Array.isArray(ids) ? ids.join(',') : ids as string;
+    const targetCurrencies = Array.isArray(vs_currencies) 
+      ? vs_currencies.join(',') 
+      : vs_currencies as string;
+
     // Create a unique cache key based on input
-    const cacheKey = `market_data:${ids}:${vs_currencies}`;
+    const cacheKey = `market_data:${coinIds}:${targetCurrencies}`;
 
     // Check cache first
     const cachedData = marketDataCache.get(cacheKey);
@@ -28,20 +37,23 @@ router.get('/market-data', async (req: Request, res: Response) => {
       return res.json(cachedData);
     }
 
-    // Simulate market data retrieval (replace with actual implementation)
+    // TODO: Replace with actual market data retrieval logic
     const marketData = {
-      [ids as string]: {
-        [vs_currencies as string]: Math.random() * 1000
+      [coinIds]: {
+        [targetCurrencies]: Math.random() * 1000
       }
     };
 
-    // Cache the result
+    // Cache the result with default TTL
     marketDataCache.set(cacheKey, marketData);
 
     res.json(marketData);
   } catch (error) {
     console.error('Market data retrieval error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 });
 
