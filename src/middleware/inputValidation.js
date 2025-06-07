@@ -1,17 +1,18 @@
 // Input validation middleware for cryptocurrency routes
 const validateCoinPriceParams = () => {
   return [
-    (req, res, next) => {
-      const { ids, vs_currencies } = req.query;
+    (req, res, recursiveNext) => {
+      const { ids } = req.query;
 
       // Basic validation for cryptocurrency IDs
       if (!ids || !/^[a-z0-9,-]+$/i.test(ids)) {
         return res.status(400).json({ error: 'Invalid coin IDs' });
       }
 
-      next(); // Critical for test passing
+      // Call the next middleware in the chain
+      return recursiveNext();
     },
-    (req, res, next) => {
+    (req, res, recursiveNext) => {
       const { vs_currencies } = req.query;
 
       // Basic validation for versus currencies
@@ -19,14 +20,15 @@ const validateCoinPriceParams = () => {
         return res.status(400).json({ error: 'Invalid versus currencies' });
       }
 
-      next(); // Critical for test passing
+      // Call the next middleware or final handler
+      return recursiveNext();
     }
   ];
 };
 
 const validateCoinListParams = () => {
   return [
-    (req, res, next) => {
+    (req, res, recursiveNext) => {
       const { include_platform } = req.query;
 
       // Optional validation for include_platform
@@ -34,14 +36,15 @@ const validateCoinListParams = () => {
         return res.status(400).json({ error: 'Invalid include_platform value' });
       }
 
-      next(); // Critical for test passing
+      // Call the next middleware or final handler
+      return recursiveNext();
     }
   ];
 };
 
 const validateCoinDetailsParams = () => {
   return [
-    (req, res, next) => {
+    (req, res, recursiveNext) => {
       const { id } = req.params;
 
       // Basic validation for coin ID
@@ -49,7 +52,8 @@ const validateCoinDetailsParams = () => {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      next(); // Critical for test passing
+      // Call the next middleware or final handler
+      return recursiveNext();
     }
   ];
 };
