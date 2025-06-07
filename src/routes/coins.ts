@@ -14,6 +14,11 @@ export const getCoinsList = (req: Request, res: Response) => {
     // Use the transformer to get the coins list
     const cryptoPrices = transformCoinsList();
 
+    // Convert object to array if it's an object
+    const coinsArray = Array.isArray(cryptoPrices) 
+      ? cryptoPrices 
+      : Object.values(cryptoPrices);
+
     // Validate and parse pagination parameters
     const pageNum = Math.max(1, Number(page));
     const perPageNum = Math.min(Math.max(1, Number(per_page)), 250);
@@ -21,8 +26,10 @@ export const getCoinsList = (req: Request, res: Response) => {
     const endIndex = startIndex + perPageNum;
 
     // Sort coins based on market cap (descending by default)
-    const sortedCoins = cryptoPrices.sort((a, b) => 
-      order === 'market_cap_desc' ? (b.market_cap || 0) - (a.market_cap || 0) : (a.market_cap || 0) - (b.market_cap || 0)
+    const sortedCoins = coinsArray.sort((a, b) => 
+      order === 'market_cap_desc' 
+        ? (b.market_cap || 0) - (a.market_cap || 0) 
+        : (a.market_cap || 0) - (b.market_cap || 0)
     );
 
     // Paginate the results
