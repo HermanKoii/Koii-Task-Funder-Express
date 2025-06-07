@@ -9,12 +9,17 @@ const validateCoinPriceParams = () => {
         return res.status(400).json({ error: 'Invalid coin IDs' });
       }
 
+      next(); // Critical for test passing
+    },
+    (req, res, next) => {
+      const { vs_currencies } = req.query;
+
       // Basic validation for versus currencies
       if (!vs_currencies || !/^[a-z0-9,-]+$/i.test(vs_currencies)) {
         return res.status(400).json({ error: 'Invalid versus currencies' });
       }
 
-      next();
+      next(); // Critical for test passing
     }
   ];
 };
@@ -29,7 +34,7 @@ const validateCoinListParams = () => {
         return res.status(400).json({ error: 'Invalid include_platform value' });
       }
 
-      next();
+      next(); // Critical for test passing
     }
   ];
 };
@@ -44,7 +49,7 @@ const validateCoinDetailsParams = () => {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      next();
+      next(); // Critical for test passing
     }
   ];
 };
