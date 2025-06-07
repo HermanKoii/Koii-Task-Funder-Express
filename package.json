@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "vitest": "^3.2.2",
-    "@types/joi": "^17.2.2"
+    "@types/joi": "^17.2.2",
+    "supertest": "^7.0.0"
   }
 }
