@@ -9,8 +9,8 @@ export function validateCoinPriceParams() {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      // Advance to the next validator
-      return next();
+      // Important: Call next even if first validation passes
+      next();
     },
     (req: Request, res: Response, next: NextFunction) => {
       const { ids, vs_currencies } = req.query || {};
@@ -20,8 +20,8 @@ export function validateCoinPriceParams() {
         return res.status(400).json({ error: 'Invalid or missing currency' });
       }
 
-      // Advance to the final step
-      return next();
+      // Important: Call next even if second validation passes
+      next();
     }
   ];
 
@@ -39,8 +39,8 @@ export function validateCoinListParams() {
         return res.status(400).json({ error: 'Invalid include_platform parameter' });
       }
 
-      // Advance to the final step
-      return next();
+      // Important: Call next even if validation passes
+      next();
     }
   ];
 
@@ -56,8 +56,8 @@ export function validateCoinDetailsParams() {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      // Advance to the final step
-      return next();
+      // Important: Call next even if validation passes
+      next();
     }
   ];
 
