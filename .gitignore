@@ -1,4 +1,51 @@
-node_modules
+<<<<<<< HEAD
+node_modules/
+dist/
 .env
-.env.funder
-*.pem
+__pycache__/
+*.log
+.DS_Store
+coverage/
+.nyc_output/
+=======
+# Dependency directories
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# TypeScript compilation cache
+*.tsbuildinfo
+>>>>>>> pr-3-Vuk7912-Koii-Task-Funder-Express
