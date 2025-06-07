@@ -8,39 +8,35 @@ interface RawCoinData {
   id: string;
   symbol: string;
   name: string;
+  current_price?: number;
   market_cap?: number;
-}
-
-/**
- * Interface representing the transformed coin list item
- */
-interface TransformedCoin {
-  id: string;
-  symbol: string;
-  name: string;
-  market_cap?: number;
+  market_cap_rank?: number;
+  total_volume?: number;
 }
 
 /**
  * Transforms the raw cryptocurrency data into the required coins list format
  * @param {string} [filePath] - Optional path to the crypto-prices.json file
- * @returns {TransformedCoin[]} Transformed list of coins
+ * @returns {RawCoinData[]} Transformed list of coins
  */
-export function transformCoinsList(filePath?: string): TransformedCoin[] {
+export function transformCoinsList(filePath?: string): RawCoinData[] {
   // Use provided file path or default to project root
   const resolvedPath = filePath || path.resolve(process.cwd(), 'crypto-prices.json');
 
   try {
     // Read the file contents
     const rawData = fs.readFileSync(resolvedPath, 'utf8');
-    const coinData: RawCoinData[] = JSON.parse(rawData);
+    const coinData: { [key: string]: RawCoinData } = JSON.parse(rawData);
 
     // Transform the data
-    return coinData.map(coin => ({
+    return Object.values(coinData).map(coin => ({
       id: coin.id,
       symbol: coin.symbol.toLowerCase(),
       name: coin.name,
-      market_cap: coin.market_cap || 0
+      current_price: coin.current_price || 0,
+      market_cap: coin.market_cap || 0,
+      market_cap_rank: coin.market_cap_rank || 0,
+      total_volume: coin.total_volume || 0
     }));
   } catch (error) {
     // Handle potential errors
