@@ -1,14 +1,11 @@
-// Input Validation Middleware Test
-import { jest } from '@jest/globals';
-
-// Mock input validation logic
-const validateInput = (input) => {
-  if (!input) return false;
-  if (typeof input !== 'string') return false;
-  return input.trim().length > 0;
-};
-
 describe('Input Validation', () => {
+  // Mock input validation logic
+  const validateInput = (input) => {
+    if (!input) return false;
+    if (typeof input !== 'string') return false;
+    return input.trim().length > 0;
+  };
+
   it('should validate non-empty string inputs', () => {
     expect(validateInput('test')).toBe(true);
     expect(validateInput(' test ')).toBe(true);
