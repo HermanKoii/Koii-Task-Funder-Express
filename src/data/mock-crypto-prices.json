@@ -1,0 +1,12 @@
+{
+  "bitcoin": {
+    "usd": 50000,
+    "eur": 42000,
+    "timestamp": 1623456789
+  },
+  "ethereum": {
+    "usd": 3500,
+    "eur": 2950,
+    "timestamp": 1623456789
+  }
+}
