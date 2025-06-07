@@ -21,9 +21,9 @@
   "devDependencies": {
     "@babel/core": "^7.24.3",
     "@babel/preset-env": "^7.24.3",
+    "@jest/globals": "^29.7.0",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
-    "jest-cucumber": "^4.1.0",
     "supertest": "^6.3.4"
   },
   "jest": {
@@ -31,24 +31,13 @@
       "^.+\\.js$": [
         "babel-jest",
         {
-          "presets": [
-            "@babel/preset-env"
-          ]
+          "presets": ["@babel/preset-env"]
         }
       ]
     },
     "testEnvironment": "node"
   },
   "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ]
+    "presets": [["@babel/preset-env", {"targets": {"node": "current"}}]]
   }
 }
