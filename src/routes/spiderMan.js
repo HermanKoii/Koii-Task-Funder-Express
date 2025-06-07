@@ -5,11 +5,11 @@
  */
 export const spiderManHandler = (req, res) => {
   try {
-    // Normalize path to handle case variations
+    // Normalize path to handle various route variations
     const requestPath = req.path.toLowerCase().replace(/[-/]/g, '');
     
-    // Check if the path matches 'spiderman' in any case
-    if (['spiderman', '/spiderman'].includes(requestPath)) {
+    // Check if the path matches spiderman variations
+    if (requestPath === 'spiderman') {
       // Return comprehensive Spider-Man details
       res.status(200).json({
         name: 'Spider-Man',
@@ -22,7 +22,7 @@ export const spiderManHandler = (req, res) => {
       // If path doesn't match, return 404
       res.status(404).json({
         error: 'Not Found',
-        message: 'Spider-Man route not found'
+        message: 'Invalid route for Spider-Man'
       });
     }
   } catch (error) {
