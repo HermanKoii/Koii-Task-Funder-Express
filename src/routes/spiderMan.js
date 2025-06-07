@@ -8,8 +8,10 @@ export const spiderManHandler = (req, res) => {
     // Normalize path to handle various route variations
     const requestPath = req.path.toLowerCase().replace(/[-/]/g, '');
     
-    // Check if the path matches spiderman variations
-    if (requestPath === 'spiderman') {
+    // Check if the path matches spiderman variations exactly
+    const validPaths = ['spiderman', 'spider', 'spider-man', 'spiderman'];
+    
+    if (validPaths.includes(requestPath)) {
       // Return comprehensive Spider-Man details
       res.status(200).json({
         name: 'Spider-Man',
