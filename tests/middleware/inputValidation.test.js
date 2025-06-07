@@ -21,42 +21,24 @@ describe('Input Validation Middleware', () => {
         vs_currencies: 'usd'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
+      validators[0](req, res, next);
+      validators[1](req, res, next);
 
-      runMiddleware();
+      expect(next).toHaveBeenCalledTimes(2);
     });
 
     it('should reject invalid coin price query params', async () => {
       const validators = validateCoinPriceParams();
       const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin!@#',
+        ids: '',
         vs_currencies: ''
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
-      };
-
-      runMiddleware();
+      validators[0](req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
     });
   });
 
@@ -64,22 +46,14 @@ describe('Input Validation Middleware', () => {
     it('should validate correct coin list query params', () => {
       const validators = validateCoinListParams();
       const { req, res, next } = createMockReqRes({
-        include_platform: 'true'
+        limit: '10',
+        offset: '0'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
+      validators[0](req, res, next);
+      validators[1](req, res, next);
 
-      runMiddleware();
+      expect(next).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -90,19 +64,10 @@ describe('Input Validation Middleware', () => {
         id: 'bitcoin'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
+      validators[0](req, res, next);
+      validators[1](req, res, next);
 
-      runMiddleware();
+      expect(next).toHaveBeenCalledTimes(2);
     });
 
     it('should reject invalid coin ID', async () => {
@@ -111,20 +76,11 @@ describe('Input Validation Middleware', () => {
         id: 'bitcoin!@#'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
-      };
-
-      runMiddleware();
+      validators[0](req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
     });
   });
 });
