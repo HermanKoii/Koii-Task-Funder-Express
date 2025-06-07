@@ -1,4 +1,15 @@
-node_modules
+node_modules/
+dist/
 .env
-.env.funder
-*.pem
+<<<<<<< HEAD
+__pycache__
+.DS_Store
+*.log
+coverage/
+.vitest
+=======
+__pycache__/
+.vitest-coverage/
+*.log
+.DS_Store
+>>>>>>> pr-8-Merango-Koii-Task-Funder-Express
