@@ -32,16 +32,24 @@ export class ErrorResponseUtil {
   private logger: winston.Logger;
 
   constructor() {
-    // Initialize Winston logger
+    // Initialize Winston logger with improved configuration
     this.logger = winston.createLogger({
       level: 'error',
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.splat(),
         winston.format.json()
       ),
       transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log' })
+        new winston.transports.Console({
+          format: winston.format.simple()
+        }),
+        new winston.transports.File({ 
+          filename: 'error.log',
+          maxsize: 5242880, // 5MB
+          maxFiles: 5
+        })
       ]
     });
   }
@@ -68,10 +76,11 @@ export class ErrorResponseUtil {
       }
     };
 
-    // Log the error
+    // Log the error with enhanced context
     this.logger.error(message, { 
       code: errorCode, 
-      details 
+      details,
+      timestamp: new Date().toISOString()
     });
 
     return res.status(errorCode).json(errorResponse);
@@ -107,6 +116,22 @@ export class ErrorResponseUtil {
       res, 
       HttpErrorCode.NOT_FOUND, 
       `${resourceName} not found`
+    );
+  }
+
+  /**
+   * Create an unauthorized error response
+   * @param res Express response object
+   * @param message Optional custom unauthorized message
+   */
+  public sendUnauthorizedError(
+    res: Response,
+    message: string = 'Unauthorized Access'
+  ): Response {
+    return this.sendErrorResponse(
+      res,
+      HttpErrorCode.UNAUTHORIZED,
+      message
     );
   }
 }
