@@ -1,9 +1,18 @@
 import { describe, it, expect, vi } from 'vitest';
 import { ErrorResponseUtil, HttpErrorCode } from '../../src/utils/error-response';
-import { mockResponse } from '../__mocks__/express-mock';
+
+// Mock Express response
+const mockResponse = () => ({
+  status: vi.fn().mockReturnThis(),
+  json: vi.fn().mockReturnThis()
+});
 
 describe('ErrorResponseUtil', () => {
-  const errorResponseUtil = new ErrorResponseUtil();
+  let errorResponseUtil: ErrorResponseUtil;
+
+  beforeEach(() => {
+    errorResponseUtil = new ErrorResponseUtil();
+  });
 
   describe('sendErrorResponse', () => {
     it('should send a standardized error response', () => {
@@ -12,7 +21,7 @@ describe('ErrorResponseUtil', () => {
       const message = 'Test error message';
       const details = { field: 'test' };
 
-      errorResponseUtil.sendErrorResponse(mockRes, errorCode, message, details);
+      errorResponseUtil.sendErrorResponse(mockRes as any, errorCode, message, details);
 
       expect(mockRes.status).toHaveBeenCalledWith(errorCode);
       expect(mockRes.json).toHaveBeenCalledWith({
@@ -31,7 +40,7 @@ describe('ErrorResponseUtil', () => {
       const mockRes = mockResponse();
       const validationErrors = { username: 'Invalid format' };
 
-      errorResponseUtil.sendValidationError(mockRes, validationErrors);
+      errorResponseUtil.sendValidationError(mockRes as any, validationErrors);
 
       expect(mockRes.status).toHaveBeenCalledWith(HttpErrorCode.BAD_REQUEST);
       expect(mockRes.json).toHaveBeenCalledWith({
@@ -50,7 +59,7 @@ describe('ErrorResponseUtil', () => {
       const mockRes = mockResponse();
       const resourceName = 'User';
 
-      errorResponseUtil.sendNotFoundError(mockRes, resourceName);
+      errorResponseUtil.sendNotFoundError(mockRes as any, resourceName);
 
       expect(mockRes.status).toHaveBeenCalledWith(HttpErrorCode.NOT_FOUND);
       expect(mockRes.json).toHaveBeenCalledWith({
@@ -63,13 +72,3 @@ describe('ErrorResponseUtil', () => {
     });
   });
 });
-
-// Create a mock for Express response
-import { Response } from 'express';
-
-export function mockResponse(): Partial<Response> {
-  return {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn().mockReturnThis()
-  };
-}
