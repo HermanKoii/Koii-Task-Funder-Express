@@ -1,0 +1,12 @@
+{
+  "bitcoin": {
+    "price": 50000.00,
+    "marketCap": 1000000000000,
+    "volume": 25000000000
+  },
+  "ethereum": {
+    "price": 3000.00,
+    "marketCap": 400000000000,
+    "volume": 15000000000
+  }
+}
