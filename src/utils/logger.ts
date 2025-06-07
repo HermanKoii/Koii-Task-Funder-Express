@@ -81,4 +81,12 @@ export const handleError = (error: Error, context?: any) => {
   console.error('Unhandled Error:', error.message, context);
 };
 
+// New: Performance logging method
+export const logPerformance = (operation: string, duration: number) => {
+  logger.info(`Performance: ${operation} took ${duration}ms`, {
+    operation,
+    duration
+  });
+};
+
 export { logger as default };

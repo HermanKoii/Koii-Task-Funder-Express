@@ -1,5 +1,7 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import axios from 'axios';
+import { logError, logInfo } from '../utils/logger';
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -8,14 +10,16 @@ const mockCoins = {
     symbol: 'btc',
     name: 'Bitcoin',
     description: 'The first decentralized cryptocurrency',
-    price: 50000
+    price: 50000,
+    market_cap: 1000000000000
   },
   'ethereum': {
     id: 'ethereum',
     symbol: 'eth',
     name: 'Ethereum',
     description: 'Blockchain platform with smart contract functionality',
-    price: 3000
+    price: 3000,
+    market_cap: 400000000000
   }
 };
 
@@ -41,7 +45,7 @@ function validateCoinId(coinId) {
  * @param {express.NextFunction} next - Express next middleware function
  */
 function coinDetailsErrorHandler(err, req, res, next) {
-  console.error(`Coin Details Error: ${err.message}`);
+  logError(`Coin Details Error: ${err.message}`);
   
   switch (err.message) {
     case 'Coin ID is required':
@@ -73,7 +77,7 @@ function coinDetailsErrorHandler(err, req, res, next) {
  * @param {express.Response} res - Express response object
  * @param {express.NextFunction} next - Express next middleware function
  */
-function getCoinDetails(req, res, next) {
+async function getCoinDetails(req, res, next) {
   try {
     const coinId = req.params.coinId;
     
@@ -90,6 +94,7 @@ function getCoinDetails(req, res, next) {
     // Check cache first
     const cachedCoin = coinCache.get(normalizedCoinId);
     if (cachedCoin) {
+      logInfo(`Cache hit for coin: ${normalizedCoinId}`);
       return res.json(cachedCoin);
     }
     
@@ -97,7 +102,24 @@ function getCoinDetails(req, res, next) {
     const coin = mockCoins[normalizedCoinId];
     
     if (!coin) {
-      throw new Error('Coin not found');
+      // Attempt to fetch from external API if not in mock data
+      try {
+        const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${normalizedCoinId}`);
+        const coinData = response.data;
+        const enrichedCoin = {
+          id: coinData.id,
+          symbol: coinData.symbol,
+          name: coinData.name,
+          description: coinData.description.en,
+          price: coinData.market_data.current_price.usd,
+          market_cap: coinData.market_data.market_cap.usd
+        };
+        
+        coinCache.set(normalizedCoinId, enrichedCoin);
+        return res.json(enrichedCoin);
+      } catch (apiError) {
+        throw new Error('Coin not found');
+      }
     }
     
     // Cache the result
