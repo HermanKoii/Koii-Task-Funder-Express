@@ -4,9 +4,10 @@ import { Request, Response, NextFunction } from 'express';
  * Validate coin price parameters
  */
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  // Provide default empty object if req is undefined
+  // Use optional chaining and provide default empty object
   const params = req?.params || {};
-  const { coin, currency } = params;
+  const query = req?.query || {};
+  const { coin, currency } = { ...params, ...query };
 
   if (!coin || !currency) {
     return res.status(400).json({ error: 'Coin and currency are required' });
@@ -24,7 +25,7 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
  * Validate coin list parameters
  */
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  // Provide default empty object if req is undefined
+  // Use optional chaining and provide default empty object
   const query = req?.query || {};
   const { limit, offset } = query;
 
@@ -43,13 +44,12 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
  * Validate coin details parameters
  */
 export function validateCoinDetailsParams(params: { id?: string } = {}) {
-  const { id } = params;
-
   return {
     validateId: (req: Request, res: Response, next: NextFunction) => {
-      // Provide default empty object if req is undefined
+      // Use optional chaining and check multiple sources
       const reqParams = req?.params || {};
-      const coinId = reqParams.id || id;
+      const reqQuery = req?.query || {};
+      const coinId = reqParams.id || reqQuery.id || params.id;
 
       if (!coinId || coinId.trim() === '') {
         return res.status(400).json({ error: 'Coin identifier is required' });
