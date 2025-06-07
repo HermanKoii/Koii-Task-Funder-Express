@@ -6,9 +6,14 @@ export const validateCoinPriceParams = (req: Request, res: Response, next: NextF
     coin: Joi.string().lowercase().required()
   });
 
-  const { error } = schema.validate(req?.params ?? {});
+  const params = req?.params ?? {};
+  const { error } = schema.validate(params);
+
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(400).json({ 
+      error: 'Validation Error', 
+      details: error.details[0].message 
+    });
   }
 
   next();
@@ -19,9 +24,14 @@ export const validateCoinListParams = (req: Request, res: Response, next: NextFu
     limit: Joi.number().min(1).max(100).optional()
   });
 
-  const { error } = schema.validate(req?.query ?? {});
+  const query = req?.query ?? {};
+  const { error } = schema.validate(query);
+
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(400).json({ 
+      error: 'Validation Error', 
+      details: error.details[0].message 
+    });
   }
 
   next();
@@ -34,7 +44,10 @@ export const validateCoinSearch = (req: Request, res: Response, next: NextFuncti
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(400).json({ 
+      error: 'Validation Error', 
+      details: error.details[0].message 
+    });
   }
 
   next();
@@ -46,9 +59,14 @@ export const validateCoinDetailsParams = () => {
       id: Joi.string().lowercase().pattern(/^[a-z-]+$/).required()
     });
 
-    const { error } = schema.validate(req?.params ?? {});
+    const params = req?.params ?? {};
+    const { error } = schema.validate(params);
+
     if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res.status(400).json({ 
+        error: 'Validation Error', 
+        details: error.details[0].message 
+      });
     }
 
     next();
