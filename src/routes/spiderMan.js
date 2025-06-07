@@ -10,7 +10,6 @@ export const spiderManHandler = (req, res) => {
       name: 'Spider-Man',
       realName: 'Peter Parker',
       powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength'],
-      description: 'Friendly neighborhood superhero with spider-like abilities',
       firstAppearance: 'Amazing Fantasy #15'
     });
   } catch (error) {
