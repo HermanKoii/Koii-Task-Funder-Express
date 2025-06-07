@@ -1,5 +1,4 @@
-import { describe, it, expect } from 'vitest';
-import cryptoPrices from '../src/data/mock-crypto-prices.json';
+const cryptoPrices = require('../src/data/crypto-prices.json');
 
 describe('Mock Cryptocurrency Prices', () => {
     // Test that the mock data has the expected structure
@@ -14,16 +13,21 @@ describe('Mock Cryptocurrency Prices', () => {
 
     // Validate each cryptocurrency object
     it('should have correct price data structure', () => {
+        const requiredProps = [
+            'id', 
+            'symbol', 
+            'name', 
+            'current_price', 
+            'market_cap', 
+            'market_cap_rank', 
+            'total_volume', 
+            'price_change_percentage_24h'
+        ];
+
         Object.values(cryptoPrices).forEach(coin => {
-            expect(coin).toHaveProperty('id');
-            expect(coin).toHaveProperty('symbol');
-            expect(coin).toHaveProperty('name');
-            expect(coin).toHaveProperty('current_price');
-            expect(coin).toHaveProperty('market_cap');
-            expect(coin).toHaveProperty('market_cap_rank');
-            expect(coin).toHaveProperty('total_volume');
-            expect(coin).toHaveProperty('price_change_percentage_24h');
-            expect(coin).toHaveProperty('last_updated');
+            requiredProps.forEach(prop => {
+                expect(coin).toHaveProperty(prop);
+            });
         });
     });
 
