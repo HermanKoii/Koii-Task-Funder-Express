@@ -1,26 +1,17 @@
 {
   "compilerOptions": {
     "target": "es2020",
-<<<<<<< HEAD
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-=======
-    "module": "es2020",
-    "lib": ["es2020"],
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "outDir": "./dist",
-    "rootDir": "./src"
->>>>>>> pr-21-HermanL0201-Koii-Task-Funder-Express
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules"]
 }
