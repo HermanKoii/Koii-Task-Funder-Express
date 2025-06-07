@@ -1,9 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
-import { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } from '../../src/middleware/inputValidation';
+import { 
+  validateCoinListParams, 
+  validateCoinPriceParams, 
+  validateCoinDetailsParams,
+  validateCoin 
+} from '../../src/middleware/inputValidation';
 
 // Mock Express request and response
-const createMockReqRes = (query = {}, params = {}) => {
-  const req = { query, params };
+const createMockReqRes = (query = {}, params = {}, body = {}) => {
+  const req = { query, params, body };
   const res = {
     status: vi.fn().mockReturnThis(),
     json: vi.fn()
@@ -13,118 +18,95 @@ const createMockReqRes = (query = {}, params = {}) => {
 };
 
 describe('Input Validation Middleware', () => {
-  describe('Coin Price Validation', () => {
-    it('should validate correct coin price query params', () => {
-      const validators = validateCoinPriceParams();
+  describe('Coin List Validation', () => {
+    it('should validate correct coin list query params', () => {
       const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin',
-        vs_currencies: 'usd'
+        order: 'market_cap_desc',
+        per_page: '50',
+        page: '1'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      validateCoinListParams(req, res, next);
+      expect(next).toHaveBeenCalled();
     });
 
-    it('should reject invalid coin price query params', async () => {
-      const validators = validateCoinPriceParams();
+    it('should reject invalid coin list query params', () => {
       const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin!@#',
-        vs_currencies: ''
+        order: 123,
+        per_page: '300',
+        page: '-1'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
-      };
-
-      runMiddleware();
-
+      validateCoinListParams(req, res, next);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        error: expect.any(String)
+      }));
     });
   });
 
-  describe('Coin List Validation', () => {
-    it('should validate correct coin list query params', () => {
-      const validators = validateCoinListParams();
-      const { req, res, next } = createMockReqRes({
-        include_platform: 'true'
-      });
+  describe('Coin Price Validation', () => {
+    it('should validate correct coin price query params', () => {
+      const { req, res, next } = createMockReqRes({}, { id: 'bitcoin' });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
+      validateCoinPriceParams(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
 
-      runMiddleware();
+    it('should reject invalid coin price query params', () => {
+      const { req, res, next } = createMockReqRes({}, { id: 123 });
+
+      validateCoinPriceParams(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        error: expect.any(String)
+      }));
     });
   });
 
   describe('Coin Details Validation', () => {
     it('should validate correct coin ID', () => {
-      const validators = validateCoinDetailsParams();
-      const { req, res, next } = createMockReqRes({}, {
+      const validator = validateCoinDetailsParams();
+      const { req, res, next } = createMockReqRes({}, { id: 'bitcoin' });
+
+      validator(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should reject invalid coin ID', () => {
+      const validator = validateCoinDetailsParams();
+      const { req, res, next } = createMockReqRes({}, { id: 'bitcoin!@#' });
+
+      validator(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        error: expect.any(String)
+      }));
+    });
+  });
+
+  describe('Coin Validation', () => {
+    it('should validate correct coin body', () => {
+      const { req, res, next } = createMockReqRes({}, {}, {
+        id: 'bitcoin',
+        symbol: 'btc',
+        name: 'Bitcoin'
+      });
+
+      validateCoin(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should reject invalid coin body', () => {
+      const { req, res, next } = createMockReqRes({}, {}, {
         id: 'bitcoin'
       });
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
-    });
-
-    it('should reject invalid coin ID', async () => {
-      const validators = validateCoinDetailsParams();
-      const { req, res, next } = createMockReqRes({}, {
-        id: 'bitcoin!@#'
-      });
-
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
-      };
-
-      runMiddleware();
-
+      validateCoin(req, res, next);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        error: expect.any(String)
+      }));
     });
   });
 });
