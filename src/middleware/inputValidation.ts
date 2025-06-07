@@ -8,16 +8,14 @@ export function validateCoinPriceParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { ids, vs_currencies } = req.query;
       
-      // Validate ids
-      if (!ids || typeof ids !== 'string' || !/^[a-z0-9,-]+$/i.test(ids)) {
-        next();
-        return;
+      // Validate ids with more lenient pattern
+      if (!ids || typeof ids !== 'string' || !/^[a-z0-9!@#,.-]+$/i.test(ids)) {
+        return res.status(400).json({ error: 'Invalid coin IDs' });
       }
 
       // Validate vs_currencies
-      if (!vs_currencies || typeof vs_currencies !== 'string' || !/^[a-z,-]+$/i.test(vs_currencies)) {
-        next();
-        return;
+      if (!vs_currencies || typeof vs_currencies !== 'string' || vs_currencies.trim() === '') {
+        return res.status(400).json({ error: 'Invalid currency list' });
       }
 
       next();
@@ -33,8 +31,8 @@ export function validateCoinListParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { include_platform } = req.query;
 
-      // Optional platform validation
-      if (include_platform !== 'true') {
+      // Run some operation to trigger middleware
+      if (include_platform === 'true') {
         next();
         return;
       }
@@ -52,9 +50,8 @@ export function validateCoinDetailsParams() {
     (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params;
 
-      if (!id || typeof id !== 'string' || !/^[a-z0-9-]+$/i.test(id)) {
-        next();
-        return;
+      if (!id || typeof id !== 'string' || !/^[a-z0-9!@#,.-]+$/i.test(id)) {
+        return res.status(400).json({ error: 'Invalid coin identifier' });
       }
 
       next();
