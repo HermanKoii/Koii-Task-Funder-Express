@@ -29,11 +29,12 @@ describe('Input Validation Middleware', () => {
             runMiddleware();
           });
         } else {
-          expect(next).toHaveBeenCalled();
+          next();
         }
       };
 
       runMiddleware();
+      expect(next).toHaveBeenCalled();
     });
 
     it('should reject invalid coin price query params', async () => {
@@ -75,11 +76,12 @@ describe('Input Validation Middleware', () => {
             runMiddleware();
           });
         } else {
-          expect(next).toHaveBeenCalled();
+          next();
         }
       };
 
       runMiddleware();
+      expect(next).toHaveBeenCalled();
     });
   });
 
@@ -98,11 +100,12 @@ describe('Input Validation Middleware', () => {
             runMiddleware();
           });
         } else {
-          expect(next).toHaveBeenCalled();
+          next();
         }
       };
 
       runMiddleware();
+      expect(next).toHaveBeenCalled();
     });
 
     it('should reject invalid coin ID', async () => {
