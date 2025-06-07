@@ -54,19 +54,35 @@ const logger = winston.createLogger({
 
 // Logging utility methods
 export const logError = (message: string, meta?: any) => {
-  logger.log('error', message, meta);
+  logger.log({
+    level: 'error',
+    message: message,
+    ...meta
+  });
 };
 
 export const logWarn = (message: string, meta?: any) => {
-  logger.log('warn', message, meta);
+  logger.log({
+    level: 'warn',
+    message: message,
+    ...meta
+  });
 };
 
 export const logInfo = (message: string, meta?: any) => {
-  logger.log('info', message, meta);
+  logger.log({
+    level: 'info',
+    message: message,
+    ...meta
+  });
 };
 
 export const logDebug = (message: string, meta?: any) => {
-  logger.log('debug', message, meta);
+  logger.log({
+    level: 'debug',
+    message: message,
+    ...meta
+  });
 };
 
 // Centralized error handler
@@ -79,14 +95,6 @@ export const handleError = (error: Error, context?: any) => {
   
   // Log to console as well
   console.error('Unhandled Error:', error.message, context);
-};
-
-// Performance logging method
-export const logPerformance = (operation: string, duration: number) => {
-  logger.info(`Performance: ${operation} took ${duration}ms`, {
-    operation,
-    duration
-  });
 };
 
 export { logger as default };
