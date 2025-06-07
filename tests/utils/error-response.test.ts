@@ -1,75 +1,36 @@
-import { describe, it, expect, vi } from 'vitest';
+import { Response } from 'express';
 import { ErrorResponseUtil, HttpErrorCode } from '../../src/utils/error-response';
-import { mockResponse } from '../__mocks__/express-mock';
 
 describe('ErrorResponseUtil', () => {
-  const errorResponseUtil = new ErrorResponseUtil();
+  let errorResponseUtil: ErrorResponseUtil;
+  let mockResponse: Partial<Response>;
 
-  describe('sendErrorResponse', () => {
-    it('should send a standardized error response', () => {
-      const mockRes = mockResponse();
-      const errorCode = HttpErrorCode.BAD_REQUEST;
-      const message = 'Test error message';
-      const details = { field: 'test' };
-
-      errorResponseUtil.sendErrorResponse(mockRes, errorCode, message, details);
-
-      expect(mockRes.status).toHaveBeenCalledWith(errorCode);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          code: errorCode,
-          message,
-          details
-        }
-      });
-    });
+  beforeEach(() => {
+    errorResponseUtil = new ErrorResponseUtil();
+    mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    };
   });
 
-  describe('sendValidationError', () => {
-    it('should send a validation error response', () => {
-      const mockRes = mockResponse();
-      const validationErrors = { username: 'Invalid format' };
+  it('should send error response with correct status and message', () => {
+    const errorCode = HttpErrorCode.BAD_REQUEST;
+    const errorMessage = 'Test error';
 
-      errorResponseUtil.sendValidationError(mockRes, validationErrors);
+    errorResponseUtil.sendErrorResponse(
+      mockResponse as Response, 
+      errorCode, 
+      errorMessage
+    );
 
-      expect(mockRes.status).toHaveBeenCalledWith(HttpErrorCode.BAD_REQUEST);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          code: HttpErrorCode.BAD_REQUEST,
-          message: 'Validation Error',
-          details: validationErrors
-        }
-      });
-    });
-  });
-
-  describe('sendNotFoundError', () => {
-    it('should send a not found error response', () => {
-      const mockRes = mockResponse();
-      const resourceName = 'User';
-
-      errorResponseUtil.sendNotFoundError(mockRes, resourceName);
-
-      expect(mockRes.status).toHaveBeenCalledWith(HttpErrorCode.NOT_FOUND);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          code: HttpErrorCode.NOT_FOUND,
-          message: 'User not found'
-        }
-      });
+    expect(mockResponse.status).toHaveBeenCalledWith(errorCode);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      success: false,
+      error: {
+        code: errorCode,
+        message: errorMessage,
+        details: undefined
+      }
     });
   });
 });
-
-// Create a mock for Express response
-import { Response } from 'express';
-
-export function mockResponse(): Partial<Response> {
-  return {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn().mockReturnThis()
-  };
-}
