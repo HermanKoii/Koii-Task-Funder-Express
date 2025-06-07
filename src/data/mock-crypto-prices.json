@@ -8,7 +8,7 @@
     "market_cap_rank": 1,
     "total_volume": 25000000000,
     "price_change_percentage_24h": 2.5,
-    "last_updated": "2023-06-15T12:00:00Z",
+    "last_updated": "2023-06-15T10:00:00Z",
     "usd": 50000,
     "eur": 42000,
     "timestamp": 1623456789
@@ -21,8 +21,8 @@
     "market_cap": 420000000000,
     "market_cap_rank": 2,
     "total_volume": 15000000000,
-    "price_change_percentage_24h": -1.2,
-    "last_updated": "2023-06-15T12:00:00Z",
+    "price_change_percentage_24h": 1.8,
+    "last_updated": "2023-06-15T10:00:00Z",
     "usd": 3500,
     "eur": 2950,
     "timestamp": 1623456789
@@ -35,8 +35,8 @@
     "market_cap": 33000000000,
     "market_cap_rank": 10,
     "total_volume": 2000000000,
-    "price_change_percentage_24h": 0.5,
-    "last_updated": "2023-06-15T12:00:00Z",
+    "price_change_percentage_24h": 3.2,
+    "last_updated": "2023-06-15T10:00:00Z",
     "usd": 0.25,
     "eur": 0.21,
     "timestamp": 1623456789
@@ -49,8 +49,8 @@
     "market_cap": 45000000000,
     "market_cap_rank": 5,
     "total_volume": 3000000000,
-    "price_change_percentage_24h": -0.8,
-    "last_updated": "2023-06-15T12:00:00Z",
+    "price_change_percentage_24h": 1.5,
+    "last_updated": "2023-06-15T10:00:00Z",
     "usd": 1.50,
     "eur": 1.25,
     "timestamp": 1623456789
