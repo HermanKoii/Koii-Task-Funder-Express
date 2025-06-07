@@ -2,10 +2,10 @@
   "name": "auto-funder-express",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +29,13 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     },
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "extensionsToTreatAsEsm": [".js"],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    }
+  },
+  "babel": {
+    "presets": [["@babel/preset-env", {"targets": {"node": "current"}}]]
   }
 }
