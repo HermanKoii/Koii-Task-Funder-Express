@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hero API is running' });
+  res.json({ message: 'Hero API is running!' });
 });
 
 app.listen(PORT, () => {
