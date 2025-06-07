@@ -1,130 +1,59 @@
-import { describe, it, expect, vi } from 'vitest';
-import { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } from '../../src/middleware/inputValidation';
+const { validateHeroName, validateHeroSearch } = require('../../src/middleware/heroValidation');
 
-// Mock Express request and response
-const createMockReqRes = (query = {}, params = {}) => {
-  const req = { query, params };
-  const res = {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn()
-  };
-  const next = vi.fn();
-  return { req, res, next };
-};
+describe('Hero Validation Middleware', () => {
+  describe('validateHeroName', () => {
+    const mockNext = jest.fn();
 
-describe('Input Validation Middleware', () => {
-  describe('Coin Price Validation', () => {
-    it('should validate correct coin price query params', () => {
-      const validators = validateCoinPriceParams();
-      const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin',
-        vs_currencies: 'usd'
-      });
-
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
+    it('should pass for valid hero names', () => {
+      const mockReq = { params: { name: 'Spider-Man' } };
+      const mockRes = { 
+        status: jest.fn().mockReturnThis(), 
+        json: jest.fn() 
       };
 
-      runMiddleware();
+      validateHeroName(mockReq, mockRes, mockNext);
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    it('should reject invalid coin price query params', async () => {
-      const validators = validateCoinPriceParams();
-      const { req, res, next } = createMockReqRes({
-        ids: 'bitcoin!@#',
-        vs_currencies: ''
-      });
-
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
+    it('should reject names shorter than 2 characters', () => {
+      const mockReq = { params: { name: 'A' } };
+      const mockRes = { 
+        status: jest.fn().mockReturnThis(), 
+        json: jest.fn() 
       };
 
-      runMiddleware();
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
+      validateHeroName(mockReq, mockRes, mockNext);
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalled();
     });
   });
 
-  describe('Coin List Validation', () => {
-    it('should validate correct coin list query params', () => {
-      const validators = validateCoinListParams();
-      const { req, res, next } = createMockReqRes({
-        include_platform: 'true'
-      });
+  describe('validateHeroSearch', () => {
+    const mockNext = jest.fn();
 
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
+    it('should pass for valid search queries', () => {
+      const mockReq = { query: { q: 'Superman' } };
+      const mockRes = { 
+        status: jest.fn().mockReturnThis(), 
+        json: jest.fn() 
       };
 
-      runMiddleware();
-    });
-  });
-
-  describe('Coin Details Validation', () => {
-    it('should validate correct coin ID', () => {
-      const validators = validateCoinDetailsParams();
-      const { req, res, next } = createMockReqRes({}, {
-        id: 'bitcoin'
-      });
-
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      validateHeroSearch(mockReq, mockRes, mockNext);
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    it('should reject invalid coin ID', async () => {
-      const validators = validateCoinDetailsParams();
-      const { req, res, next } = createMockReqRes({}, {
-        id: 'bitcoin!@#'
-      });
-
-      let currentMiddleware = 0;
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        }
+    it('should skip validation when no query is provided', () => {
+      const mockReq = { query: {} };
+      const mockRes = { 
+        status: jest.fn().mockReturnThis(), 
+        json: jest.fn() 
       };
 
-      runMiddleware();
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
+      validateHeroSearch(mockReq, mockRes, mockNext);
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
     });
   });
 });
