@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 import { errorHandler, asyncHandler } from '../src/middleware/errorHandler';
@@ -9,8 +8,8 @@ describe('Error Handling Middleware', () => {
   describe('errorHandler', () => {
     const createMockResponse = () => {
       return {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis()
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
       } as unknown as Response;
     };
 
@@ -18,7 +17,7 @@ describe('Error Handling Middleware', () => {
       const err = new ValidationError('Invalid input');
       const req = {} as Request;
       const res = createMockResponse();
-      const next = vi.fn() as NextFunction;
+      const next = jest.fn() as NextFunction;
 
       errorHandler(err, req, res, next);
 
@@ -33,7 +32,7 @@ describe('Error Handling Middleware', () => {
       const err = new Error('Generic error');
       const req = {} as Request;
       const res = createMockResponse();
-      const next = vi.fn() as NextFunction;
+      const next = jest.fn() as NextFunction;
 
       errorHandler(err, req, res, next);
 
