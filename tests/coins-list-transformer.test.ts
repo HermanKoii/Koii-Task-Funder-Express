@@ -13,13 +13,19 @@ describe('Coins List Transformer', () => {
       id: 'bitcoin',
       symbol: 'btc',
       name: 'Bitcoin',
-      market_cap: 0
+      current_price: 0,
+      market_cap: 0,
+      market_cap_rank: 0,
+      total_volume: 0
     });
     expect(transformedCoins[1]).toEqual({
       id: 'ethereum',
       symbol: 'eth',
       name: 'Ethereum',
-      market_cap: 0
+      current_price: 0,
+      market_cap: 0,
+      market_cap_rank: 0,
+      total_volume: 0
     });
   });
 
