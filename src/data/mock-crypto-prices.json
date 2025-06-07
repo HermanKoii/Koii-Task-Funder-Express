@@ -1,0 +1,16 @@
+{
+  "bitcoin": {
+    "id": "bitcoin",
+    "symbol": "btc",
+    "name": "Bitcoin",
+    "currentPrice": 50000,
+    "marketCap": 1000000000000
+  },
+  "ethereum": {
+    "id": "ethereum", 
+    "symbol": "eth",
+    "name": "Ethereum",
+    "currentPrice": 3000,
+    "marketCap": 500000000000
+  }
+}
