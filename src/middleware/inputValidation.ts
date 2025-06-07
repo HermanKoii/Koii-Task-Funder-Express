@@ -1,63 +1,80 @@
 import { Request, Response, NextFunction } from 'express';
+import cryptoPrices from '../data/mock-crypto-prices.json';
+
+export const validateCoinPriceParams = (req: Request, res: Response, next: NextFunction) => {
+  if (!req || !req.query) {
+    return res.status(400).json({
+      error: 'Invalid Request',
+      message: 'Request object or query is undefined'
+    });
+  }
+
+  const coins = req.query.coins as string || '';
+  
+  if (!coins || coins.trim() === '') {
+    return res.status(400).json({
+      error: 'Invalid Coins',
+      message: 'Coin list cannot be empty'
+    });
+  }
+
+  const coinList = coins.split(',').map(coin => coin.trim());
+  const invalidCoins = coinList.filter(coin => !cryptoPrices[coin as keyof typeof cryptoPrices]);
+
+  if (invalidCoins.length > 0) {
+    return res.status(400).json({
+      error: 'Invalid Coins',
+      message: `Unsupported coins: ${invalidCoins.join(', ')}`
+    });
+  }
+
+  next();
+};
 
 export const validateCoinListParams = (req: Request, res: Response, next: NextFunction) => {
   if (!req || !req.query) {
-    return res.status(400).json({ 
-      error: 'Invalid Request', 
-      message: 'Request object or query is undefined' 
+    return res.status(400).json({
+      error: 'Invalid Request',
+      message: 'Request object or query is undefined'
     });
   }
 
-  const { order = 'market_cap_desc', per_page = 100, page = 1 } = req.query;
+  const limit = parseInt(req.query.limit as string, 10);
+  const offset = parseInt(req.query.offset as string, 10);
 
-  const validOrders = ['market_cap_desc', 'market_cap_asc'];
-  if (order && !validOrders.includes(order as string)) {
-    return res.status(400).json({ 
-      error: 'Invalid order parameter', 
-      message: `Order must be one of: ${validOrders.join(', ')}` 
-    });
-  }
-
-  const perPageNum = Number(per_page);
-  if (isNaN(perPageNum) || perPageNum < 1 || perPageNum > 250) {
-    return res.status(400).json({ 
-      error: 'Invalid per_page parameter', 
-      message: 'Per page must be a number between 1 and 250' 
-    });
-  }
-
-  const pageNum = Number(page);
-  if (isNaN(pageNum) || pageNum < 1) {
-    return res.status(400).json({ 
-      error: 'Invalid page parameter', 
-      message: 'Page must be a positive number' 
+  if (isNaN(limit) || isNaN(offset) || limit <= 0 || offset < 0) {
+    return res.status(400).json({
+      error: 'Invalid Pagination',
+      message: 'Limit and offset must be valid positive numbers'
     });
   }
 
   next();
 };
 
-export const validateCoin = (req: Request, res: Response, next: NextFunction) => {
-  const { coinId } = req.params;
+export const validateCoinDetailsParams = (req: Request, res: Response, next: NextFunction) => {
+  if (!req || !req.params) {
+    return res.status(400).json({
+      error: 'Invalid Request',
+      message: 'Request object or params is undefined'
+    });
+  }
 
-  if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
-    return res.status(400).json({ 
-      error: 'Invalid coin ID', 
-      message: 'Coin ID is required and must be a non-empty string' 
+  const coinId = req.params.coinId as string || '';
+
+  if (!coinId || coinId.trim() === '') {
+    return res.status(400).json({
+      error: 'Invalid Coin ID',
+      message: 'Coin ID cannot be empty'
+    });
+  }
+
+  if (!cryptoPrices[coinId as keyof typeof cryptoPrices]) {
+    return res.status(404).json({
+      error: 'Coin Not Found',
+      message: `Coin with ID ${coinId} not found`
     });
   }
 
   next();
-};
-
-export const validateCoinPriceParams = (req: Request, res: Response, next: NextFunction) => {
-  // Default validation pass-through
-  if (next) next();
-};
-
-export const validateCoinDetailsParams = (req?: Request, res?: Response, next?: NextFunction) => {
-  // Stub function to satisfy test requirements
-  return () => {
-    if (next) next();
-  };
 };
