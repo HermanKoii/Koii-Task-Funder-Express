@@ -5,7 +5,7 @@ export const validateCoinPriceParams = () => {
     (req: Request, res: Response, next: NextFunction) => {
       const { ids, vs_currencies } = req.query;
 
-      // Basic input validation
+      // Validate ids
       if (!ids || typeof ids !== 'string' || !/^[a-zA-Z0-9,]+$/.test(ids)) {
         return res.status(400).json({ 
           error: 'Invalid ids parameter', 
@@ -13,6 +13,7 @@ export const validateCoinPriceParams = () => {
         });
       }
 
+      // Validate vs_currencies
       if (!vs_currencies || typeof vs_currencies !== 'string' || vs_currencies.trim() === '') {
         return res.status(400).json({ 
           error: 'Invalid vs_currencies parameter', 
@@ -64,19 +65,6 @@ export const validateCoinListParams = () => {
       next();
     }
   ];
-};
-
-export const validateCoin = (req: Request, res: Response, next: NextFunction) => {
-  const { coinId } = req.params;
-
-  if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
-    return res.status(400).json({ 
-      error: 'Invalid coin ID', 
-      message: 'Coin ID is required and must be a non-empty string' 
-    });
-  }
-
-  next();
 };
 
 export const validateCoinDetailsParams = () => {
