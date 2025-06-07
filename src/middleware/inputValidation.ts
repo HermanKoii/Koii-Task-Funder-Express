@@ -7,10 +7,11 @@ export const validateCoinListParams = () => {
 
       // Simulate some minimal validation
       if (include_platform && include_platform !== 'true' && include_platform !== 'false') {
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid include_platform parameter',
           message: 'include_platform must be either "true" or "false"'
         });
+        return;
       }
 
       next();
@@ -25,10 +26,11 @@ export const validateCoinPriceParams = () => {
 
       // Basic validation
       if (!ids || !vs_currencies) {
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid parameters',
           message: 'Both ids and vs_currencies are required'
         });
+        return;
       }
 
       next();
@@ -43,10 +45,11 @@ export const validateCoinDetailsParams = () => {
 
       // Validate coin ID
       if (!id || !/^[a-z0-9-]+$/i.test(id)) {
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid coin ID',
           message: 'Coin ID must be a valid identifier'
         });
+        return;
       }
 
       next();
