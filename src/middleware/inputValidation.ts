@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams() {
-  return [
+  const validators = [
     (req: Request, res: Response, next: NextFunction) => {
       const { ids, vs_currencies } = req.query || {};
 
@@ -9,19 +9,27 @@ export function validateCoinPriceParams() {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
+      // Advance to the next validator
+      return next();
+    },
+    (req: Request, res: Response, next: NextFunction) => {
+      const { ids, vs_currencies } = req.query || {};
+
       if (!vs_currencies || typeof vs_currencies !== 'string' || 
           !['usd', 'eur', 'btc'].includes(vs_currencies.toLowerCase())) {
         return res.status(400).json({ error: 'Invalid or missing currency' });
       }
 
-      // Add an explicit call to next
+      // Advance to the final step
       return next();
     }
   ];
+
+  return validators;
 }
 
 export function validateCoinListParams() {
-  return [
+  const validators = [
     (req: Request, res: Response, next: NextFunction) => {
       const { include_platform } = req.query || {};
 
@@ -31,14 +39,16 @@ export function validateCoinListParams() {
         return res.status(400).json({ error: 'Invalid include_platform parameter' });
       }
 
-      // Add an explicit call to next
+      // Advance to the final step
       return next();
     }
   ];
+
+  return validators;
 }
 
 export function validateCoinDetailsParams() {
-  return [
+  const validators = [
     (req: Request, res: Response, next: NextFunction) => {
       const { id } = req.params || {};
 
@@ -46,8 +56,10 @@ export function validateCoinDetailsParams() {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      // Add an explicit call to next
+      // Advance to the final step
       return next();
     }
   ];
+
+  return validators;
 }
