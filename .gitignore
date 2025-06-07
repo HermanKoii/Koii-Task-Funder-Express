@@ -3,5 +3,9 @@ dist/
 .env
 __pycache__/
 *.log
+<<<<<<< HEAD
 .vitest/
+=======
+.DS_Store
+>>>>>>> pr-4-SammyBryant11-Koii-Task-Funder-Express
 coverage/
