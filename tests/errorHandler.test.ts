@@ -24,8 +24,11 @@ describe('Error Handling Middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        message: 'Invalid input'
+        success: false,
+        error: expect.objectContaining({
+          code: 400,
+          message: 'Invalid input'
+        })
       }));
     });
 
@@ -39,8 +42,11 @@ describe('Error Handling Middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        message: 'An unexpected error occurred'
+        success: false,
+        error: expect.objectContaining({
+          code: 500,
+          message: 'An unexpected error occurred'
+        })
       }));
     });
   });
@@ -63,8 +69,11 @@ describe('Error Handling Middleware', () => {
       
       expect(response.status).toBe(404);
       expect(response.body).toEqual(expect.objectContaining({
-        status: 'error',
-        message: 'Resource not found'
+        success: false,
+        error: expect.objectContaining({
+          code: 404,
+          message: 'Resource not found'
+        })
       }));
     });
   });
