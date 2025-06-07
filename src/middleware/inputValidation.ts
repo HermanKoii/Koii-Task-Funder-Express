@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  const { coinId, currency } = req.params;
+  const { coinId, currency } = req.params || {};
 
   if (!coinId) {
     return res.status(400).json({ error: 'Coin ID is required' });
@@ -16,7 +16,7 @@ export function validateCoinPriceParams(req: Request, res: Response, next: NextF
 }
 
 export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  const { limit } = req.query;
+  const { limit } = req.query || {};
 
   if (limit && (isNaN(Number(limit)) || Number(limit) <= 0)) {
     return res.status(400).json({ error: 'Limit must be a positive number' });
@@ -25,12 +25,14 @@ export function validateCoinListParams(req: Request, res: Response, next: NextFu
   next();
 }
 
-export function validateCoin(req: Request, res: Response, next: NextFunction) {
-  const { coinId } = req.params;
+export function validateCoinDetailsParams(options = {}) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params || {};
 
-  if (!coinId || typeof coinId !== 'string') {
-    return res.status(400).json({ error: 'Invalid coin ID' });
-  }
+    if (!id || typeof id !== 'string' || !/^[a-z0-9-]+$/.test(id)) {
+      return res.status(400).json({ error: 'Invalid coin ID' });
+    }
 
-  next();
+    next();
+  };
 }
