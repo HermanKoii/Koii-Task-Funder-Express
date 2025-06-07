@@ -5,31 +5,27 @@ export function validateCoinPriceParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
       // Ensure default values or mock values for req and res
-      if (!req) req = {} as Request;
+      if (!req) req = { query: {} } as Request;
       if (!res) res = { status: () => ({ json: () => {} }) } as Response;
       if (!req.query) req.query = {};
 
       const { ids, vs_currencies } = req.query;
 
-      if (!ids || 
-          typeof ids !== 'string' || 
-          !/^[a-z0-9,-]+$/.test(ids.toLowerCase())) {
-        return res.status(400).json({
-          error: 'Invalid Input',
-          message: 'Coin IDs must be a valid comma-separated string'
-        });
+      // Explicitly validate or pass through valid request
+      if (ids && 
+          typeof ids === 'string' && 
+          /^[a-z0-9,-]+$/.test(ids.toLowerCase()) &&
+          vs_currencies &&
+          typeof vs_currencies === 'string' &&
+          vs_currencies.trim().length > 0) {
+        return next();
       }
 
-      if (!vs_currencies || 
-          typeof vs_currencies !== 'string' || 
-          vs_currencies.trim().length === 0) {
-        return res.status(400).json({
-          error: 'Invalid Input',
-          message: 'VS currencies must be a non-empty string'
-        });
-      }
-
-      next();
+      // If not valid, return error
+      return res.status(400).json({
+        error: 'Invalid Input',
+        message: 'Invalid coin price query parameters'
+      });
     }
   ];
 }
@@ -39,13 +35,13 @@ export function validateCoinListParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
       // Ensure default values or mock values for req and res
-      if (!req) req = {} as Request;
+      if (!req) req = { query: {} } as Request;
       if (!res) res = { status: () => ({ json: () => {} }) } as Response;
       if (!req.query) req.query = {};
 
       // This middleware just passes through for now
       // As the test doesn't specify any specific validation
-      next();
+      return next();
     }
   ];
 }
@@ -55,23 +51,24 @@ export function validateCoinDetailsParams() {
   return [
     (req: Request, res: Response, next: NextFunction) => {
       // Ensure default values or mock values for req and res
-      if (!req) req = {} as Request;
+      if (!req) req = { params: {} } as Request;
       if (!res) res = { status: () => ({ json: () => {} }) } as Response;
       if (!req.params) req.params = {};
 
       const { id } = req.params;
 
-      // Validate coin ID format
-      if (!id || 
-          typeof id !== 'string' || 
-          !/^[a-z0-9-]+$/.test(id.toLowerCase())) {
-        return res.status(400).json({
-          error: 'Invalid Input',
-          message: 'Coin ID must be a valid alphanumeric string'
-        });
+      // Explicitly validate or pass through valid request
+      if (id && 
+          typeof id === 'string' && 
+          /^[a-z0-9-]+$/.test(id.toLowerCase())) {
+        return next();
       }
 
-      next();
+      // If not valid, return error
+      return res.status(400).json({
+        error: 'Invalid Input',
+        message: 'Invalid coin ID'
+      });
     }
   ];
 }
