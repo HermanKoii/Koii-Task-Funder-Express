@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import app from '../index.js';
+import express from 'express';
+import { spiderManHandler } from '../src/routes/spiderMan.js';
+
+const app = express();
+app.get('/spiderMan', spiderManHandler);
 
 describe('Spider-Man Route', () => {
   it('should return Spider-Man details', async () => {
