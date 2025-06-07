@@ -4,7 +4,11 @@ dist/
 __pycache__/
 *.log
 <<<<<<< HEAD
+<<<<<<< HEAD
 .vitest/
+=======
+.DS_Store
+>>>>>>> pr-4-SammyBryant11-Koii-Task-Funder-Express
 =======
 .DS_Store
 >>>>>>> pr-4-SammyBryant11-Koii-Task-Funder-Express
