@@ -1,5 +1,12 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import CacheService from '../cache-service';
+
+// Integrate cache service with existing implementation
+const cacheService = CacheService.getInstance({
+  stdTTL: 600, // 10 minutes cache
+  checkperiod: 120 // 2 minutes check period
+});
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -18,9 +25,6 @@ const mockCoins = {
     price: 3000
   }
 };
-
-// Create a cache instance
-const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
 
 /**
  * Validate coin ID input
@@ -87,8 +91,8 @@ function getCoinDetails(req, res, next) {
     
     const normalizedCoinId = coinId.toLowerCase();
     
-    // Check cache first
-    const cachedCoin = coinCache.get(normalizedCoinId);
+    // Check cache first using CacheService
+    const cachedCoin = cacheService.get(normalizedCoinId);
     if (cachedCoin) {
       return res.json(cachedCoin);
     }
@@ -100,8 +104,8 @@ function getCoinDetails(req, res, next) {
       throw new Error('Coin not found');
     }
     
-    // Cache the result
-    coinCache.set(normalizedCoinId, coin);
+    // Cache the result using CacheService
+    cacheService.set(normalizedCoinId, coin);
     
     res.json(coin);
   } catch (error) {
