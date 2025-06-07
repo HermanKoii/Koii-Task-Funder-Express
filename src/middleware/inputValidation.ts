@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export const validateCoinListParams = (req: Request, res: Response, next: NextFunction) => {
-  const { order, per_page, page } = req.query;
+  const { order, per_page, page } = req.query || {};
 
   // Validate order
   if (order && !['market_cap_desc', 'market_cap_asc'].includes(order as string)) {
@@ -24,7 +24,7 @@ export const validateCoinListParams = (req: Request, res: Response, next: NextFu
 };
 
 export const validateCoinPriceParams = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  const { id } = req.params || {};
 
   if (!id) {
     return res.status(400).json({ error: 'Coin ID is required' });
@@ -33,7 +33,23 @@ export const validateCoinPriceParams = (req: Request, res: Response, next: NextF
   next();
 };
 
+export const validateCoinDetailsParams = (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params || {};
+
+  if (!id) {
+    return res.status(400).json({ error: 'Coin ID is required' });
+  }
+
+  // Basic validation for coin ID - can be a valid string with alphanumeric characters
+  const validCoinIdRegex = /^[a-z0-9-]+$/i;
+  if (!validCoinIdRegex.test(id)) {
+    return res.status(400).json({ error: 'Invalid coin ID format' });
+  }
+
+  next();
+};
+
 export const validateCoin = (coin: any) => {
-  const requiredFields = ['id', 'symbol', 'name', 'current_price', 'market_cap', 'total_volume'];
+  const requiredFields = ['id', 'symbol', 'name', 'current_price', 'market_cap', 'total_volume', 'market_cap_rank', 'price_change_percentage_24h'];
   return requiredFields.every(field => coin.hasOwnProperty(field));
 };
