@@ -8,19 +8,18 @@ export const validateCoinPriceParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { ids, vs_currencies } = req.query;
 
-      // Validate ids
-      if (!ids || typeof ids !== 'string' || !/^[a-zA-Z0-9,]+$/.test(ids)) {
-        res.status(400);
-        return res.json({ error: 'Invalid Coin IDs' });
+      // If params are valid, call next
+      if (ids && vs_currencies && 
+          typeof ids === 'string' && 
+          typeof vs_currencies === 'string' &&
+          /^[a-zA-Z0-9,]+$/.test(ids) && 
+          /^[a-zA-Z0-9,]+$/.test(vs_currencies)) {
+        return next();
       }
 
-      // Validate vs_currencies
-      if (!vs_currencies || typeof vs_currencies !== 'string' || !/^[a-zA-Z0-9,]+$/.test(vs_currencies)) {
-        res.status(400);
-        return res.json({ error: 'Invalid Currencies' });
-      }
-
-      next();
+      // If invalid, return error response
+      res.status(400);
+      res.json({ error: 'Invalid parameters' });
     }
   ];
 };
@@ -31,13 +30,15 @@ export const validateCoinListParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      // Optional validation for include_platform
-      if (include_platform && !['true', 'false'].includes(include_platform as string)) {
-        res.status(400);
-        return res.json({ error: 'Invalid include_platform' });
+      // If include_platform is valid or not provided, call next
+      if (!include_platform || 
+          ['true', 'false'].includes(include_platform as string)) {
+        return next();
       }
 
-      next();
+      // If invalid, return error response
+      res.status(400);
+      res.json({ error: 'Invalid include_platform' });
     }
   ];
 };
@@ -48,13 +49,16 @@ export const validateCoinDetailsParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { id } = req.params;
 
-      // Validate coin ID
-      if (!id || typeof id !== 'string' || !/^[a-zA-Z0-9-]+$/.test(id)) {
-        res.status(400);
-        return res.json({ error: 'Invalid Coin ID' });
+      // If ID is valid
+      if (id && 
+          typeof id === 'string' && 
+          /^[a-zA-Z0-9-]+$/.test(id)) {
+        return next();
       }
 
-      next();
+      // If invalid, return error response
+      res.status(400);
+      res.json({ error: 'Invalid Coin ID' });
     }
   ];
 };
