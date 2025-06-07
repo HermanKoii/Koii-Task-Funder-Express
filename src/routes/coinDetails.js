@@ -1,5 +1,6 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import { logError } from '../utils/logger.js';
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -41,7 +42,12 @@ function validateCoinId(coinId) {
  * @param {express.NextFunction} next - Express next middleware function
  */
 function coinDetailsErrorHandler(err, req, res, next) {
-  console.error(`Coin Details Error: ${err.message}`);
+  // Log the error using the centralized logger
+  logError(`Coin Details Error: ${err.message}`, {
+    method: req.method,
+    path: req.path,
+    params: req.params
+  });
   
   switch (err.message) {
     case 'Coin ID is required':
