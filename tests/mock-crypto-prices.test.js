@@ -39,4 +39,11 @@ describe('Mock Cryptocurrency Prices', () => {
             expect(coin.total_volume).toBeGreaterThan(0);
         });
     });
+
+    // Check last_updated format
+    it('should have valid last_updated timestamp', () => {
+        Object.values(cryptoPrices).forEach(coin => {
+            expect(coin.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+        });
+    });
 });
