@@ -1,9 +1,11 @@
 import express from 'express';
-import heroRoutes from './routes/heroRoutes';
+import { spiderManHandler } from './routes/spiderMan';
 
 const app = express();
 
-// Use hero routes
-app.use(heroRoutes);
+app.get('/spiderMan', spiderManHandler);
+app.get('/spiderman', spiderManHandler);
+app.get('/spider-man', spiderManHandler);
+app.get('/SpiderMan', spiderManHandler);
 
 export default app;
