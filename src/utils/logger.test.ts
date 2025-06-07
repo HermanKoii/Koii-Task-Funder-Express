@@ -1,71 +1,69 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as loggerModule from './logger';
+import { logError, logWarn, logInfo, logDebug, handleError } from './logger';
 import winston from 'winston';
 
+jest.mock('winston', () => ({
+  log: jest.fn(),
+  error: jest.fn()
+}));
+
 describe('Logger Utility', () => {
-  // Mock logger methods
-  let mockLogger: any;
+  let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    mockLogger = {
-      log: vi.fn(),
-      error: vi.fn()
-    };
-
-    // Mock the entire Winston logger creation
-    vi.spyOn(winston, 'createLogger').mockReturnValue(mockLogger);
+    consoleSpy = jest.spyOn(console, 'error').mockImplementation();
   });
 
-  it('should log errors correctly', () => {
-    const errorMessage = 'Test error';
-    const errorMeta = { code: 500 };
-    
-    loggerModule.logError(errorMessage, errorMeta);
-    
-    expect(mockLogger.log).toHaveBeenCalledWith('error', errorMessage, errorMeta);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should log warnings correctly', () => {
-    const warningMessage = 'Test warning';
-    const warningMeta = { warning: 'Potential issue' };
-    
-    loggerModule.logWarn(warningMessage, warningMeta);
-    
-    expect(mockLogger.log).toHaveBeenCalledWith('warn', warningMessage, warningMeta);
+  test('logError should log an error message', () => {
+    const message = 'Test error message';
+    const meta = { context: 'test' };
+
+    logError(message, meta);
+
+    expect(winston.log).toHaveBeenCalledWith('error', message, meta);
   });
 
-  it('should log info messages', () => {
-    const infoMessage = 'Information log';
-    const infoMeta = { user: 'admin' };
-    
-    loggerModule.logInfo(infoMessage, infoMeta);
-    
-    expect(mockLogger.log).toHaveBeenCalledWith('info', infoMessage, infoMeta);
+  test('logWarn should log a warning message', () => {
+    const message = 'Test warning message';
+    const meta = { context: 'test' };
+
+    logWarn(message, meta);
+
+    expect(winston.log).toHaveBeenCalledWith('warn', message, meta);
   });
 
-  it('should log debug messages', () => {
-    const debugMessage = 'Debug log';
-    const debugMeta = { details: 'Extra info' };
-    
-    loggerModule.logDebug(debugMessage, debugMeta);
-    
-    expect(mockLogger.log).toHaveBeenCalledWith('debug', debugMessage, debugMeta);
+  test('logInfo should log an info message', () => {
+    const message = 'Test info message';
+    const meta = { context: 'test' };
+
+    logInfo(message, meta);
+
+    expect(winston.log).toHaveBeenCalledWith('info', message, meta);
   });
 
-  it('should handle errors with context', () => {
-    const testError = new Error('Test Error');
-    const context = { operation: 'test' };
-    
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    
-    loggerModule.handleError(testError, context);
-    
-    expect(mockLogger.error).toHaveBeenCalledWith('Unhandled Error', expect.objectContaining({
-      message: 'Test Error',
-      context: { operation: 'test' }
-    }));
-    expect(consoleSpy).toHaveBeenCalledWith('Unhandled Error:', 'Test Error', context);
-    
-    consoleSpy.mockRestore();
+  test('logDebug should log a debug message', () => {
+    const message = 'Test debug message';
+    const meta = { context: 'test' };
+
+    logDebug(message, meta);
+
+    expect(winston.log).toHaveBeenCalledWith('debug', message, meta);
+  });
+
+  test('handleError should log error details and use console.error', () => {
+    const error = new Error('Test error');
+    const context = { module: 'test' };
+
+    handleError(error, context);
+
+    expect(winston.error).toHaveBeenCalledWith('Unhandled Error', {
+      message: error.message,
+      stack: error.stack,
+      context
+    });
+    expect(consoleSpy).toHaveBeenCalledWith('Unhandled Error:', error.message, context);
   });
 });
