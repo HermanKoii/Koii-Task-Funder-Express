@@ -1,14 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import app from '../index.js';
+import app from '../src/app'; // Corrected import path
 
 describe('Spider-Man Route', () => {
   it('should return Spider-Man details', async () => {
-    const response = await request(app)
-      .get('/spiderMan')
-      .expect('Content-Type', /json/)
-      .expect(200);
+    const response = await request(app).get('/spiderMan');
     
+    expect(response.status).toBe(200);
     expect(response.body).toEqual({
       name: 'Spider-Man',
       description: 'Friendly neighborhood superhero with spider-like abilities',
