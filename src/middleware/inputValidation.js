@@ -5,9 +5,10 @@
  * @param {express.NextFunction} next - Express next middleware function
  */
 export function validateCoinId(req, res, next) {
-  const { coinId } = req.params;
+  const { coinId, id } = req.params;
+  const actualId = coinId || id;
 
-  if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
+  if (!actualId || typeof actualId !== 'string' || actualId.trim().length === 0) {
     return res.status(400).json({
       error: 'Invalid Input',
       message: 'Coin ID is required and must be a non-empty string'
@@ -16,7 +17,7 @@ export function validateCoinId(req, res, next) {
 
   // Basic coin ID validation: alphanumeric with optional dash or underscore
   const coinIdRegex = /^[a-z0-9-_]+$/i;
-  if (!coinIdRegex.test(coinId)) {
+  if (!coinIdRegex.test(actualId)) {
     return res.status(400).json({
       error: 'Invalid Input',
       message: 'Coin ID contains invalid characters'
@@ -36,24 +37,19 @@ export function validateCoinPriceParams() {
       const { vs_currencies, ids } = req.query;
 
       if (!vs_currencies) {
-        res.status(400).json({
+        return res.status(400).json({
           error: 'Invalid Input',
           message: 'vs_currencies parameter is required'
         });
-        next('route');
-        return;
       }
 
       if (ids && !/^[a-z0-9-_,]+$/i.test(ids)) {
-        res.status(400).json({
+        return res.status(400).json({
           error: 'Invalid Input',
           message: 'ids parameter contains invalid characters'
         });
-        next('route');
-        return;
       }
 
-      // Ensure next is always called
       next();
     }
   ];
@@ -69,15 +65,12 @@ export function validateCoinListParams() {
       const { include_platform } = req.query;
 
       if (include_platform && typeof include_platform !== 'string') {
-        res.status(400).json({
+        return res.status(400).json({
           error: 'Invalid Input',
           message: 'include_platform must be a string'
         });
-        next('route');
-        return;
       }
 
-      // Ensure next is always called
       next();
     }
   ];
