@@ -14,6 +14,15 @@ export function validateCoinId(req, res, next) {
     });
   }
 
+  // Basic coin ID validation: alphanumeric with optional dash or underscore
+  const coinIdRegex = /^[a-z0-9-_]+$/i;
+  if (!coinIdRegex.test(coinId)) {
+    return res.status(400).json({
+      error: 'Invalid Input',
+      message: 'Coin ID contains invalid characters'
+    });
+  }
+
   next();
 }
 
@@ -24,7 +33,9 @@ export function validateCoinId(req, res, next) {
  * @param {express.NextFunction} next - Express next middleware function
  */
 export function validateCoinPriceParams(req, res, next) {
-  const { vs_currency, ids } = req.query;
+  // Default parameters in case req is undefined
+  const query = req?.query || {};
+  const { vs_currency, ids } = query;
 
   if (!vs_currency) {
     return res.status(400).json({
@@ -50,7 +61,9 @@ export function validateCoinPriceParams(req, res, next) {
  * @param {express.NextFunction} next - Express next middleware function
  */
 export function validateCoinListParams(req, res, next) {
-  const { include_platform } = req.query;
+  // Default parameters in case req is undefined
+  const query = req?.query || {};
+  const { include_platform } = query;
 
   if (include_platform && typeof include_platform !== 'string') {
     return res.status(400).json({
@@ -62,8 +75,19 @@ export function validateCoinListParams(req, res, next) {
   next();
 }
 
+/**
+ * Validate coin details parameters
+ * @returns {Object} An object with parameter validation functions
+ */
+export function validateCoinDetailsParams() {
+  return {
+    validateCoinId
+  };
+}
+
 export default {
   validateCoinId,
   validateCoinPriceParams,
-  validateCoinListParams
+  validateCoinListParams,
+  validateCoinDetailsParams
 };
