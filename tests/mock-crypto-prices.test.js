@@ -11,15 +11,16 @@ describe('Crypto Prices Mock Data', () => {
 
   it('should have valid crypto prices data', () => {
     expect(cryptoPricesData).toBeDefined();
-    expect(Array.isArray(cryptoPricesData)).toBe(true);
-    expect(cryptoPricesData.length).toBeGreaterThan(0);
+    expect(typeof cryptoPricesData).toBe('object');
+    expect(Object.keys(cryptoPricesData).length).toBeGreaterThan(0);
   });
 
   it('each crypto entry should have required fields', () => {
-    cryptoPricesData.forEach(crypto => {
+    Object.values(cryptoPricesData).forEach(crypto => {
+      expect(crypto).toHaveProperty('id');
       expect(crypto).toHaveProperty('name');
-      expect(crypto).toHaveProperty('price');
-      expect(typeof crypto.price).toBe('number');
+      expect(crypto).toHaveProperty('current_price');
+      expect(typeof crypto.current_price).toBe('number');
     });
   });
 });
