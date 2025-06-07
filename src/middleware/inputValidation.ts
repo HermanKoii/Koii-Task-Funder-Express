@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
 export const validateCoinListParams = (req: Request, res: Response, next: NextFunction) => {
-  const { order, per_page, page } = req.query;
+  // Use a mock or dummy request if needed for testing
+  const query = req?.query || {};
+  const { order, per_page, page } = query;
 
   // Validate order parameter
   if (order && typeof order !== 'string') {
@@ -28,7 +30,9 @@ export const validateCoinListParams = (req: Request, res: Response, next: NextFu
 };
 
 export const validateCoinPriceParams = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  // Use a mock or dummy request if needed for testing
+  const params = req?.params || {};
+  const { id } = params;
 
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ error: 'Invalid coin ID' });
@@ -37,8 +41,22 @@ export const validateCoinPriceParams = (req: Request, res: Response, next: NextF
   next();
 };
 
+export const validateCoinDetailsParams = () => {
+  // Provide a method to support the test case
+  return (req: Request, res: Response, next: NextFunction) => {
+    const params = req?.params || {};
+    const { id } = params;
+
+    if (!id || !/^[a-z0-9-]+$/.test(id)) {
+      return res.status(400).json({ error: 'Invalid coin ID' });
+    }
+
+    next();
+  };
+};
+
 export const validateCoin = (req: Request, res: Response, next: NextFunction) => {
-  const { id, symbol, name } = req.body;
+  const { id, symbol, name } = req.body || {};
 
   if (!id || !symbol || !name) {
     return res.status(400).json({ error: 'Coin must have id, symbol, and name' });
