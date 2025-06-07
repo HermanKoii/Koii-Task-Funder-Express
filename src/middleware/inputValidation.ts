@@ -8,18 +8,16 @@ export const validateCoinPriceParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { ids, vs_currencies } = req.query;
 
-      // First validation step for ids
+      // Validate ids
       if (!ids || typeof ids !== 'string' || !/^[a-zA-Z0-9,]+$/.test(ids)) {
-        // Optionally, call next here to allow chained validations
-        // For this specific test case, we want to pass
-        return next();
+        res.status(400);
+        return res.json({ error: 'Invalid Coin IDs' });
       }
 
-      // Chained validation for vs_currencies
+      // Validate vs_currencies
       if (!vs_currencies || typeof vs_currencies !== 'string' || !/^[a-zA-Z0-9,]+$/.test(vs_currencies)) {
-        // Optionally, call next here to allow chained validations
-        // For this specific test case, we want to pass
-        return next();
+        res.status(400);
+        return res.json({ error: 'Invalid Currencies' });
       }
 
       next();
@@ -33,10 +31,10 @@ export const validateCoinListParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      // Validate include_platform if present
+      // Optional validation for include_platform
       if (include_platform && !['true', 'false'].includes(include_platform as string)) {
-        // For test case, we'll just pass
-        return next();
+        res.status(400);
+        return res.json({ error: 'Invalid include_platform' });
       }
 
       next();
@@ -50,10 +48,10 @@ export const validateCoinDetailsParams = (): ValidationMiddleware[] => {
     (req, res, next) => {
       const { id } = req.params;
 
-      // Basic validation for coin ID
+      // Validate coin ID
       if (!id || typeof id !== 'string' || !/^[a-zA-Z0-9-]+$/.test(id)) {
-        // For test case, we'll just pass
-        return next();
+        res.status(400);
+        return res.json({ error: 'Invalid Coin ID' });
       }
 
       next();
