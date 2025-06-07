@@ -1,8 +1,7 @@
-/**
- * Spider-Man route handler
- * @param {import('express').Request} req - Express request object
- * @param {import('express').Response} res - Express response object
- */
+import express from 'express';
+
+const router = express.Router();
+
 export const spiderManHandler = (req, res) => {
   try {
     // Return a comprehensive representation of Spider-Man
@@ -21,3 +20,7 @@ export const spiderManHandler = (req, res) => {
     });
   }
 };
+
+router.get(['/spiderMan', '/spiderman', '/spider-man', '/SpiderMan'], spiderManHandler);
+
+export default router;
