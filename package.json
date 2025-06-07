@@ -15,11 +15,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(@_koii/create-task-cli)/)"
     ],
-    "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [".js"],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    }
+    "testEnvironment": "node"
   },
   "babel": {
     "configFile": "./babel.config.cjs"
