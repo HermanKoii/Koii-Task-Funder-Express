@@ -14,7 +14,8 @@ export function validateCoinPriceParams() {
         return res.status(400).json({ error: 'Invalid or missing currency' });
       }
 
-      next();
+      // Add an explicit call to next
+      return next();
     }
   ];
 }
@@ -30,7 +31,8 @@ export function validateCoinListParams() {
         return res.status(400).json({ error: 'Invalid include_platform parameter' });
       }
 
-      next();
+      // Add an explicit call to next
+      return next();
     }
   ];
 }
@@ -44,7 +46,8 @@ export function validateCoinDetailsParams() {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
 
-      next();
+      // Add an explicit call to next
+      return next();
     }
   ];
 }
