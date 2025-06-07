@@ -1,5 +1,6 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import CacheService from '../cache-service';
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -19,22 +20,35 @@ const mockCoins = {
   }
 };
 
-// Create a cache instance
-const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
+// Use centralized cache service
+const coinCache = CacheService.getInstance({
+  stdTTL: 600,        // 10 minutes cache
+  maxKeys: 100        // Limit cache size
+});
 
 /**
- * Validate coin ID input
+ * Validate coin ID input with enhanced checks
  * @param {string} coinId - The ID of the coin to validate
  * @throws {Error} If coin ID is invalid
  */
 function validateCoinId(coinId) {
-  if (!coinId || typeof coinId !== 'string' || coinId.trim().length === 0) {
-    throw new Error('Coin ID is required');
+  if (!coinId || typeof coinId !== 'string') {
+    throw new Error('Invalid coin ID format');
+  }
+
+  const trimmedId = coinId.trim().toLowerCase();
+  
+  if (trimmedId.length === 0) {
+    throw new Error('Coin ID cannot be empty');
+  }
+
+  if (!/^[a-z0-9-]+$/.test(trimmedId)) {
+    throw new Error('Coin ID contains invalid characters');
   }
 }
 
 /**
- * Error handler middleware for coin details route
+ * Enhanced error handler middleware for coin details route
  * @param {Error} err - The error object
  * @param {express.Request} req - Express request object
  * @param {express.Response} res - Express response object
@@ -43,32 +57,25 @@ function validateCoinId(coinId) {
 function coinDetailsErrorHandler(err, req, res, next) {
   console.error(`Coin Details Error: ${err.message}`);
   
-  switch (err.message) {
-    case 'Coin ID is required':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Coin ID is required',
-        status: 404
-      });
-    
-    case 'Coin not found':
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'Cryptocurrency not found',
-        status: 404
-      });
-    
-    default:
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred',
-        status: 500
-      });
-  }
+  const errorMap = {
+    'Invalid coin ID format': { status: 400, message: 'Invalid coin ID format' },
+    'Coin ID cannot be empty': { status: 400, message: 'Coin ID is required' },
+    'Coin ID contains invalid characters': { status: 400, message: 'Coin ID contains invalid characters' },
+    'Coin not found': { status: 404, message: 'Cryptocurrency not found' },
+    'default': { status: 500, message: 'An unexpected error occurred' }
+  };
+
+  const errorResponse = errorMap[err.message] || errorMap['default'];
+  
+  res.status(errorResponse.status).json({
+    error: http.STATUS_CODES[errorResponse.status],
+    message: errorResponse.message,
+    status: errorResponse.status
+  });
 }
 
 /**
- * Get coin details by ID
+ * Get coin details by ID with improved error handling
  * @param {express.Request} req - Express request object
  * @param {express.Response} res - Express response object
  * @param {express.NextFunction} next - Express next middleware function
@@ -76,11 +83,6 @@ function coinDetailsErrorHandler(err, req, res, next) {
 function getCoinDetails(req, res, next) {
   try {
     const coinId = req.params.coinId;
-    
-    // Check if coinId is undefined or empty
-    if (!coinId) {
-      throw new Error('Coin ID is required');
-    }
     
     // Validate input
     validateCoinId(coinId);
