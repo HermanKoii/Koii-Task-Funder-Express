@@ -35,6 +35,13 @@ export function validateCoinPriceParams() {
     (req, res, next) => {
       const { vs_currencies, ids } = req.query;
 
+      // Always call next in the happy path
+      if (vs_currencies && (!ids || /^[a-z0-9-_,]+$/i.test(ids))) {
+        next();
+        return;
+      }
+
+      // Rejection cases
       if (!vs_currencies) {
         return res.status(400).json({
           error: 'Invalid Input',
@@ -48,8 +55,6 @@ export function validateCoinPriceParams() {
           message: 'ids parameter contains invalid characters'
         });
       }
-
-      next();
     }
   ];
 }
@@ -63,14 +68,16 @@ export function validateCoinListParams() {
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      if (include_platform && typeof include_platform !== 'string') {
-        return res.status(400).json({
-          error: 'Invalid Input',
-          message: 'include_platform must be a string'
-        });
+      // Always call next in the happy path
+      if (!include_platform || typeof include_platform === 'string') {
+        next();
+        return;
       }
 
-      next();
+      return res.status(400).json({
+        error: 'Invalid Input',
+        message: 'include_platform must be a string'
+      });
     }
   ];
 }
