@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import winston from 'winston';
 
 /**
  * Enum representing standard HTTP error codes
@@ -29,23 +28,6 @@ export interface ErrorResponse {
  * Utility for creating standardized error responses
  */
 export class ErrorResponseUtil {
-  private logger: winston.Logger;
-
-  constructor() {
-    // Initialize Winston logger
-    this.logger = winston.createLogger({
-      level: 'error',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-      ),
-      transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log' })
-      ]
-    });
-  }
-
   /**
    * Send a standardized error response
    * @param res Express response object
@@ -68,8 +50,8 @@ export class ErrorResponseUtil {
       }
     };
 
-    // Log the error
-    this.logger.error(message, { 
+    // Simple console logging (can be replaced with more robust logging)
+    console.error(`Error: ${message}`, { 
       code: errorCode, 
       details 
     });
