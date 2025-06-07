@@ -7,7 +7,8 @@
     "current_price": 50000,
     "market_cap": 1000000000000,
     "total_volume": 50000000000,
-    "price_change_percentage_24h": 1.5
+    "price_change_percentage_24h": 1.5,
+    "last_updated": "2023-06-01T12:00:00Z"
   },
   "ethereum": {
     "id": "ethereum", 
@@ -17,6 +18,18 @@
     "current_price": 3000,
     "market_cap": 500000000000,
     "total_volume": 25000000000,
-    "price_change_percentage_24h": 0.8
+    "price_change_percentage_24h": 0.8,
+    "last_updated": "2023-06-01T12:00:00Z"
+  },
+  "dogecoin": {
+    "id": "dogecoin",
+    "symbol": "doge",
+    "name": "Dogecoin",
+    "market_cap_rank": 10,
+    "current_price": 0.1,
+    "market_cap": 15000000000,
+    "total_volume": 5000000000,
+    "price_change_percentage_24h": 2.5,
+    "last_updated": "2023-06-01T12:00:00Z"
   }
 }
