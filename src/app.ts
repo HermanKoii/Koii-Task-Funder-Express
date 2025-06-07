@@ -3,7 +3,6 @@ import { spiderManHandler } from './routes/spiderMan';
 
 const app = express();
 
-// Routes
 app.get('/spiderMan', spiderManHandler);
 app.get('/spiderman', spiderManHandler);
 app.get('/spider-man', spiderManHandler);
