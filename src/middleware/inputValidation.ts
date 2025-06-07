@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const validateCoinPriceParams = (req: Request, res: Response, next: NextFunction) => {
-  const { coin, currency } = req?.params || {};
+type ValidationFunction = (req: Request, res: Response, next: NextFunction) => void;
+
+export const validateCoinPriceParams: ValidationFunction = (req, res, next) => {
+  // Safely access params with fallback
+  const params = req?.params || {};
+  const { coin, currency } = params;
   
   if (!coin || !currency) {
     return res.status(400).json({ error: 'Coin and currency are required' });
@@ -10,9 +14,10 @@ export const validateCoinPriceParams = (req: Request, res: Response, next: NextF
   next();
 };
 
-export const validateCoinListParams = (req: Request, res: Response, next: NextFunction) => {
-  // Example validation logic for coin list
-  const { limit, offset } = req?.query || {};
+export const validateCoinListParams: ValidationFunction = (req, res, next) => {
+  // Safely access query with fallback
+  const query = req?.query || {};
+  const { limit, offset } = query;
   
   if (limit && (typeof limit !== 'string' || isNaN(Number(limit)))) {
     return res.status(400).json({ error: 'Invalid limit parameter' });
@@ -25,8 +30,10 @@ export const validateCoinListParams = (req: Request, res: Response, next: NextFu
   next();
 };
 
-export const validateCoinDetailsParams = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req?.params || {};
+export const validateCoinDetailsParams: ValidationFunction = (req, res, next) => {
+  // Safely access params with fallback
+  const params = req?.params || {};
+  const { id } = params;
   
   if (!id || !/^[a-z0-9-]+$/.test(id)) {
     return res.status(400).json({ error: 'Invalid coin ID' });
