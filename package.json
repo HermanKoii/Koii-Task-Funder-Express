@@ -28,7 +28,12 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.js$": "babel-jest"
+      "^.+\\.js$": [
+        "babel-jest",
+        {
+          "presets": ["@babel/preset-env"]
+        }
+      ]
     },
     "testEnvironment": "node"
   },
