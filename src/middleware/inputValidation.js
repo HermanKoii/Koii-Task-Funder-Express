@@ -35,7 +35,7 @@ export function validateCoinPriceParams() {
     (req, res, next) => {
       const { vs_currencies, ids } = req.query;
 
-      // Always call next in the happy path
+      // Ensure next is always called
       if (vs_currencies && (!ids || /^[a-z0-9-_,]+$/i.test(ids))) {
         next();
         return;
@@ -43,17 +43,21 @@ export function validateCoinPriceParams() {
 
       // Rejection cases
       if (!vs_currencies) {
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid Input',
           message: 'vs_currencies parameter is required'
         });
+        next('route');  // Prevent further middleware execution
+        return;
       }
 
       if (ids && !/^[a-z0-9-_,]+$/i.test(ids)) {
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid Input',
           message: 'ids parameter contains invalid characters'
         });
+        next('route');  // Prevent further middleware execution
+        return;
       }
     }
   ];
@@ -68,16 +72,17 @@ export function validateCoinListParams() {
     (req, res, next) => {
       const { include_platform } = req.query;
 
-      // Always call next in the happy path
+      // Ensure next is always called
       if (!include_platform || typeof include_platform === 'string') {
         next();
         return;
       }
 
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Invalid Input',
         message: 'include_platform must be a string'
       });
+      next('route');  // Prevent further middleware execution
     }
   ];
 }
