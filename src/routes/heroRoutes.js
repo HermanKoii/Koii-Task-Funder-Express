@@ -1,5 +1,5 @@
-import express from 'express';
-import { heroes } from '../data/heroes.js';
+const express = require('express');
+const { heroes } = require('../data/heroes');
 
 const heroRoutes = express.Router();
 
@@ -15,4 +15,4 @@ heroRoutes.get('/ironMan', (req, res) => {
   }
 });
 
-export default heroRoutes;
+module.exports = heroRoutes;
