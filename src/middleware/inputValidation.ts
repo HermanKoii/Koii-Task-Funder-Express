@@ -1,56 +1,50 @@
 import { Request, Response, NextFunction } from 'express';
 
-export function validateCoinPriceParams(req: Request, res: Response, next: NextFunction) {
-  // Ensure req is not undefined
-  if (!req) {
-    return res.status(400).json({ error: 'Invalid request' });
-  }
+export function validateCoinPriceParams() {
+  return [
+    (req: Request, res: Response, next: NextFunction) => {
+      const { ids, vs_currencies } = req.query || {};
 
-  const params = req.params || {};
-  const { coinId, currency } = params;
+      if (!ids || typeof ids !== 'string' || !/^[a-z0-9-]+$/.test(ids)) {
+        return res.status(400).json({ error: 'Invalid coin ID' });
+      }
 
-  if (!coinId) {
-    return res.status(400).json({ error: 'Coin ID is required' });
-  }
+      if (!vs_currencies || typeof vs_currencies !== 'string' || 
+          !['usd', 'eur', 'btc'].includes(vs_currencies.toLowerCase())) {
+        return res.status(400).json({ error: 'Invalid or missing currency' });
+      }
 
-  const validCurrencies = ['usd', 'eur', 'btc'];
-  if (!currency || !validCurrencies.includes(currency.toLowerCase())) {
-    return res.status(400).json({ error: 'Invalid or missing currency' });
-  }
-
-  next();
+      next();
+    }
+  ];
 }
 
-export function validateCoinListParams(req: Request, res: Response, next: NextFunction) {
-  // Ensure req is not undefined
-  if (!req) {
-    return res.status(400).json({ error: 'Invalid request' });
-  }
+export function validateCoinListParams() {
+  return [
+    (req: Request, res: Response, next: NextFunction) => {
+      const { include_platform } = req.query || {};
 
-  const query = req.query || {};
-  const { limit } = query;
+      // Flexible validation for coin list params
+      if (include_platform !== undefined && 
+          typeof include_platform !== 'string') {
+        return res.status(400).json({ error: 'Invalid include_platform parameter' });
+      }
 
-  if (limit && (isNaN(Number(limit)) || Number(limit) <= 0)) {
-    return res.status(400).json({ error: 'Limit must be a positive number' });
-  }
-
-  next();
+      next();
+    }
+  ];
 }
 
-export function validateCoinDetailsParams(options = {}) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    // Ensure req is not undefined
-    if (!req) {
-      return res.status(400).json({ error: 'Invalid request' });
+export function validateCoinDetailsParams() {
+  return [
+    (req: Request, res: Response, next: NextFunction) => {
+      const { id } = req.params || {};
+
+      if (!id || typeof id !== 'string' || !/^[a-z0-9-]+$/.test(id)) {
+        return res.status(400).json({ error: 'Invalid coin ID' });
+      }
+
+      next();
     }
-
-    const params = req.params || {};
-    const { id } = params;
-
-    if (!id || typeof id !== 'string' || !/^[a-z0-9-]+$/.test(id)) {
-      return res.status(400).json({ error: 'Invalid coin ID' });
-    }
-
-    next();
-  };
+  ];
 }
