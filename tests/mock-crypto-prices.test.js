@@ -1,4 +1,4 @@
-const cryptoPrices = require('../src/data/mock-crypto-prices.json');
+const cryptoPrices = require('../src/data/crypto-prices.json');
 
 describe('Mock Cryptocurrency Prices', () => {
     // Test that the mock data has the expected structure
