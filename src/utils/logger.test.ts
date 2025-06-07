@@ -1,24 +1,29 @@
-import winston from 'winston';
-import { logError, logWarn, logInfo, logDebug, handleError } from './logger';
+import logger, { logError, logWarn, logInfo, logDebug, handleError } from './logger';
 
-// Mock winston completely
-jest.mock('winston', () => ({
-  createLogger: jest.fn(() => ({
+// Mock logger methods
+jest.mock('winston', () => {
+  const mLogger = {
     log: jest.fn(),
     error: jest.fn()
-  })),
-  format: {
-    combine: jest.fn(),
-    timestamp: jest.fn(),
-    errors: jest.fn(),
-    splat: jest.fn(),
-    json: jest.fn()
-  },
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn()
-  }
-}));
+  };
+  
+  return {
+    createLogger: jest.fn(() => mLogger),
+    format: {
+      combine: jest.fn(),
+      timestamp: jest.fn(),
+      errors: jest.fn(),
+      splat: jest.fn(),
+      json: jest.fn(),
+      colorize: jest.fn(),
+      simple: jest.fn()
+    },
+    transports: {
+      Console: jest.fn(),
+      File: jest.fn()
+    }
+  };
+});
 
 describe('Logger Utility', () => {
   let consoleSpy: jest.SpyInstance;
@@ -37,9 +42,8 @@ describe('Logger Utility', () => {
 
     logError(message, meta);
 
-    // Verify the log method was called
-    const logger = winston.createLogger();
-    expect(logger.log).toHaveBeenCalledWith('error', message, meta);
+    const loggerInstance = logger as any;
+    expect(loggerInstance.log).toHaveBeenCalledWith('error', message, meta);
   });
 
   test('logWarn should log a warning message', () => {
@@ -48,8 +52,8 @@ describe('Logger Utility', () => {
 
     logWarn(message, meta);
 
-    const logger = winston.createLogger();
-    expect(logger.log).toHaveBeenCalledWith('warn', message, meta);
+    const loggerInstance = logger as any;
+    expect(loggerInstance.log).toHaveBeenCalledWith('warn', message, meta);
   });
 
   test('logInfo should log an info message', () => {
@@ -58,8 +62,8 @@ describe('Logger Utility', () => {
 
     logInfo(message, meta);
 
-    const logger = winston.createLogger();
-    expect(logger.log).toHaveBeenCalledWith('info', message, meta);
+    const loggerInstance = logger as any;
+    expect(loggerInstance.log).toHaveBeenCalledWith('info', message, meta);
   });
 
   test('logDebug should log a debug message', () => {
@@ -68,8 +72,8 @@ describe('Logger Utility', () => {
 
     logDebug(message, meta);
 
-    const logger = winston.createLogger();
-    expect(logger.log).toHaveBeenCalledWith('debug', message, meta);
+    const loggerInstance = logger as any;
+    expect(loggerInstance.log).toHaveBeenCalledWith('debug', message, meta);
   });
 
   test('handleError should log error details and use console.error', () => {
@@ -78,8 +82,8 @@ describe('Logger Utility', () => {
 
     handleError(error, context);
 
-    const logger = winston.createLogger();
-    expect(logger.error).toHaveBeenCalledWith('Unhandled Error', {
+    const loggerInstance = logger as any;
+    expect(loggerInstance.error).toHaveBeenCalledWith('Unhandled Error', {
       message: error.message,
       stack: error.stack,
       context
