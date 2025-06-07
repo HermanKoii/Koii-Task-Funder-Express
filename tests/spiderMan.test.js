@@ -10,7 +10,9 @@ describe('Spider-Man Route', () => {
     expect(response.body).toEqual({
       name: 'Spider-Man',
       description: 'Friendly neighborhood superhero with spider-like abilities',
-      realName: 'Peter Parker'
+      realName: 'Peter Parker',
+      powers: ['Wall-crawling', 'Spider-sense', 'Superhuman strength'],
+      firstAppearance: 'Amazing Fantasy #15'
     });
   });
 });
