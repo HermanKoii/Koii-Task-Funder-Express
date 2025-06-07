@@ -37,7 +37,11 @@ export const errorHandler = (
  * Catches any async errors and passes them to global error handler
  */
 export const asyncHandler = (fn: Function) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next);
+    } catch (error) {
+      next(error);
+    }
   };
 };
