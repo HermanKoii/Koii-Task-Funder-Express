@@ -1,4 +1,11 @@
-node_modules
+node_modules/
+dist/
 .env
-.env.funder
-*.pem
+__pycache__/
+*.log
+<<<<<<< HEAD
+.vitest/
+=======
+.DS_Store
+>>>>>>> pr-4-SammyBryant11-Koii-Task-Funder-Express
+coverage/
