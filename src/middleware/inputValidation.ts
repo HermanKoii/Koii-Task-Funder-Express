@@ -13,6 +13,10 @@ export const validateCoinPriceParams = (): ValidationFunction[] => {
       }
       
       next();
+    },
+    (req, res, next) => {
+      // Additional validation if needed
+      next();
     }
   ];
 };
@@ -32,6 +36,10 @@ export const validateCoinListParams = (): ValidationFunction[] => {
       }
       
       next();
+    },
+    (req, res, next) => {
+      // Additional validation if needed
+      next();
     }
   ];
 };
@@ -46,6 +54,10 @@ export const validateCoinDetailsParams = (): ValidationFunction[] => {
         return res.status(400).json({ error: 'Invalid coin ID' });
       }
       
+      next();
+    },
+    (req, res, next) => {
+      // Additional validation if needed
       next();
     }
   ];
