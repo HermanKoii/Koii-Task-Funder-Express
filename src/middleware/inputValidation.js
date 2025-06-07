@@ -17,19 +17,17 @@ function isValidCoinId(coinId) {
  */
 export function validateCoinPriceParams(req, res, next) {
   if (!req || !req.params) {
-    return res.status(400).json({
-      error: 'Invalid Request',
-      message: 'Request parameters are missing'
-    });
+    const error = new Error('Request parameters are missing');
+    error.status = 400;
+    return next(error);
   }
 
   const { coinId } = req.params;
 
   if (!isValidCoinId(coinId)) {
-    return res.status(400).json({
-      error: 'Invalid Parameters',
-      message: 'Coin ID is required and must contain only lowercase letters, numbers, and hyphens'
-    });
+    const error = new Error('Invalid coin ID');
+    error.status = 400;
+    return next(error);
   }
 
   next();
@@ -43,26 +41,23 @@ export function validateCoinPriceParams(req, res, next) {
  */
 export function validateCoinListParams(req, res, next) {
   if (!req || !req.query) {
-    return res.status(400).json({
-      error: 'Invalid Request',
-      message: 'Request query parameters are missing'
-    });
+    const error = new Error('Request query parameters are missing');
+    error.status = 400;
+    return next(error);
   }
 
   const { limit, offset } = req.query;
 
   if (limit && (isNaN(limit) || parseInt(limit) <= 0)) {
-    return res.status(400).json({
-      error: 'Invalid Parameters',
-      message: 'Limit must be a positive number'
-    });
+    const error = new Error('Limit must be a positive number');
+    error.status = 400;
+    return next(error);
   }
 
   if (offset && (isNaN(offset) || parseInt(offset) < 0)) {
-    return res.status(400).json({
-      error: 'Invalid Parameters',
-      message: 'Offset must be a non-negative number'
-    });
+    const error = new Error('Offset must be a non-negative number');
+    error.status = 400;
+    return next(error);
   }
 
   next();
@@ -82,19 +77,17 @@ export function validateCoinDetailsParams() {
      */
     validateId: (req, res, next) => {
       if (!req || !req.params) {
-        return res.status(400).json({
-          error: 'Invalid Request',
-          message: 'Request parameters are missing'
-        });
+        const error = new Error('Request parameters are missing');
+        error.status = 400;
+        return next(error);
       }
 
       const { id } = req.params;
 
       if (!isValidCoinId(id)) {
-        return res.status(400).json({
-          error: 'Invalid Parameters',
-          message: 'Coin ID is required and must contain only lowercase letters, numbers, and hyphens'
-        });
+        const error = new Error('Invalid coin ID');
+        error.status = 400;
+        return next(error);
       }
 
       next();
@@ -110,11 +103,19 @@ export function validateCoinDetailsParams() {
 export function validateCoin(coin) {
   if (!coin) return false;
 
-  const requiredFields = ['id', 'symbol', 'name', 'current_price', 'market_cap', 'market_cap_rank'];
+  const requiredFields = [
+    'id', 'symbol', 'name', 'current_price', 
+    'market_cap', 'market_cap_rank', 
+    'total_volume', 'price_change_percentage_24h', 
+    'last_updated'
+  ];
+
   return requiredFields.every(field => 
     coin.hasOwnProperty(field) && 
     (field !== 'current_price' || typeof coin[field] === 'number') &&
     (field !== 'market_cap' || typeof coin[field] === 'number') &&
-    (field !== 'market_cap_rank' || typeof coin[field] === 'number')
+    (field !== 'market_cap_rank' || typeof coin[field] === 'number') &&
+    (field !== 'total_volume' || typeof coin[field] === 'number') &&
+    (field !== 'price_change_percentage_24h' || typeof coin[field] === 'number')
   );
 }
