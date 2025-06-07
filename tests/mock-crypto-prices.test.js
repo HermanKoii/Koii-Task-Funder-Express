@@ -1,16 +1,12 @@
-import { readFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require('fs');
+const path = require('path');
 
 describe('Crypto Prices JSON', () => {
   let cryptoPrices;
 
   beforeAll(() => {
     const cryptoPricesPath = path.resolve(__dirname, '../src/data/crypto-prices.json');
-    cryptoPrices = JSON.parse(readFileSync(cryptoPricesPath, 'utf8'));
+    cryptoPrices = JSON.parse(fs.readFileSync(cryptoPricesPath, 'utf8'));
   });
 
   it('should have valid crypto prices data', () => {
