@@ -1,14 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } from '../../src/middleware/inputValidation';
+const { validateCoinPriceParams, validateCoinListParams, validateCoinDetailsParams } = require('../../src/middleware/inputValidation');
 
 // Mock Express request and response
 const createMockReqRes = (query = {}, params = {}) => {
   const req = { query, params };
   const res = {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn()
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn()
   };
-  const next = vi.fn();
+  const next = jest.fn();
   return { req, res, next };
 };
 
