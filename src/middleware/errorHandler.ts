@@ -12,23 +12,23 @@ export const errorHandler = (
   res: Response, 
   next: NextFunction
 ) => {
-  // Determine appropriate status code and error details
+  // Determine appropriate status code and message
   const statusCode = err instanceof ApiError 
     ? err.statusCode 
     : HttpErrorCode.INTERNAL_SERVER_ERROR;
 
-  // Prepare error details for logging and response
-  const errorDetails = process.env.NODE_ENV === 'development' 
-    ? { stack: err.stack } 
-    : undefined;
+  const message = err instanceof ApiError 
+    ? err.message 
+    : 'An unexpected error occurred';
 
-  // Use centralized error response utility
-  return errorResponseUtil.sendErrorResponse(
-    res, 
-    statusCode, 
-    err.message || 'An unexpected error occurred', 
-    errorDetails
-  );
+  // Create standardized error response
+  const errorResponse = {
+    status: 'error',
+    message: message
+  };
+
+  // Send error response
+  return res.status(statusCode).json(errorResponse);
 };
 
 /**
