@@ -5,12 +5,16 @@ const {PublicKey, Connection,Keypair} = require('@_koii/web3.js');
 const crypto = require('crypto');
 const { parse } = require('path');
 const axios = require('axios');
+
 const app = express();
 const port = 3000;
+
 const SIGNING_SECRET = process.env.SIGNING_SECRET
 const funder_keypair = process.env.funder_keypair
 const user_id_list = ['U06NM9A2VC1', 'U02QTSK9R3N', 'U02QNL3PPFF']
+
 app.use(express.raw({ type: 'application/x-www-form-urlencoded' }));
+
 function verifySlackRequest(req) {
     const slackSignature = req.headers['x-slack-signature'];
     const timestamp = req.headers['x-slack-request-timestamp'];
@@ -31,7 +35,6 @@ function verifySlackRequest(req) {
 
 // Route to handle funding task
 app.post('/fundtask', async (req, res) => {
-
     if (!verifySlackRequest(req)) {
         return res.status(400).send('Invalid request signature');
     }
@@ -72,11 +75,6 @@ app.post('/fundtask', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`App running on port ${port}`);
-});
-
-
 async function generic_fund_task(TASK_ID, AMOUNT){
     const connection = new Connection("https://testnet.koii.network", "confirmed");
 
@@ -93,11 +91,10 @@ async function generic_fund_task(TASK_ID, AMOUNT){
         await fund_a_KPL_task(TASK_ID, AMOUNT, stakePotAccount, connection, mint_publicKey)
         
     }else{
-
         await fund_a_task(TASK_ID, AMOUNT, stakePotAccount, connection)
-   
     }
 }
+
 async function fund_a_task(TASK_ID, AMOUNT, stakePotAccount,connection){
     console.log("Start Funding:");
     console.log("Funding task with Id: ", TASK_ID);
@@ -135,3 +132,12 @@ async function fund_a_KPL_task(TASK_ID, AMOUNT, stakePotAccount,connection, mint
     await KPLCheckProgram(); 
     await KPLFundTask(payerKeypair,taskStateInfoAddress, stakePotAccount, amount, mint_publicKey);
 }
+
+// Start server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`App running on port ${port}`);
+    });
+}
+
+module.exports = app;
