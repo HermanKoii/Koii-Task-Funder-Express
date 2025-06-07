@@ -54,35 +54,19 @@ const logger = winston.createLogger({
 
 // Logging utility methods
 export const logError = (message: string, meta?: any) => {
-  logger.log({
-    level: 'error',
-    message: message,
-    ...meta
-  });
+  logger.log('error', message, meta || {});
 };
 
 export const logWarn = (message: string, meta?: any) => {
-  logger.log({
-    level: 'warn',
-    message: message,
-    ...meta
-  });
+  logger.log('warn', message, meta || {});
 };
 
 export const logInfo = (message: string, meta?: any) => {
-  logger.log({
-    level: 'info',
-    message: message,
-    ...meta
-  });
+  logger.log('info', message, meta || {});
 };
 
 export const logDebug = (message: string, meta?: any) => {
-  logger.log({
-    level: 'debug',
-    message: message,
-    ...meta
-  });
+  logger.log('debug', message, meta || {});
 };
 
 // Centralized error handler
