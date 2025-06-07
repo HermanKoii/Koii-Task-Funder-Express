@@ -13,21 +13,9 @@ describe('Input Validation Middleware', () => {
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
       const next = vi.fn();
 
-      const validators = [validateCoinPriceParams];
-      let currentMiddleware = 0;
+      validateCoinPriceParams(req, res, next);
 
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      expect(next).toHaveBeenCalled();
     });
 
     it('should reject invalid coin price query params', () => {
@@ -35,22 +23,11 @@ describe('Input Validation Middleware', () => {
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
       const next = vi.fn();
 
-      const validators = [validateCoinPriceParams];
-      let currentMiddleware = 0;
+      validateCoinPriceParams(req, res, next);
 
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(res.status).toHaveBeenCalledWith(400);
-          expect(res.json).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
     });
   });
 
@@ -61,21 +38,21 @@ describe('Input Validation Middleware', () => {
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
       const next = vi.fn();
 
-      const validators = [validateCoinListParams];
-      let currentMiddleware = 0;
+      validateCoinListParams(req, res, next);
 
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
+      expect(next).toHaveBeenCalled();
+    });
 
-      runMiddleware();
+    it('should reject invalid coin list query params', () => {
+      const req = { query: { limit: '-1', offset: 'invalid' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const next = vi.fn();
+
+      validateCoinListParams(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
     });
   });
 
@@ -86,21 +63,9 @@ describe('Input Validation Middleware', () => {
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
       const next = vi.fn();
 
-      const validators = [validateCoinDetailsParams];
-      let currentMiddleware = 0;
+      validateCoinDetailsParams(req, res, next);
 
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(next).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      expect(next).toHaveBeenCalled();
     });
 
     it('should reject invalid coin ID', () => {
@@ -108,22 +73,11 @@ describe('Input Validation Middleware', () => {
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
       const next = vi.fn();
 
-      const validators = [validateCoinDetailsParams];
-      let currentMiddleware = 0;
+      validateCoinDetailsParams(req, res, next);
 
-      const runMiddleware = () => {
-        if (currentMiddleware < validators.length) {
-          validators[currentMiddleware](req, res, () => {
-            currentMiddleware++;
-            runMiddleware();
-          });
-        } else {
-          expect(res.status).toHaveBeenCalledWith(400);
-          expect(res.json).toHaveBeenCalled();
-        }
-      };
-
-      runMiddleware();
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
     });
   });
 });
