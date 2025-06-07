@@ -27,10 +27,10 @@ describe('Error Handler Middleware', () => {
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.json).toHaveBeenCalledWith(expect.objectContaining({
+    expect(mockResponse.json).toHaveBeenCalledWith({
       status: 'error',
       message: 'An unexpected error occurred'
-    }));
+    });
   });
 
   it('should handle ApiError with specific status code', () => {
@@ -44,9 +44,9 @@ describe('Error Handler Middleware', () => {
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(400);
-    expect(mockResponse.json).toHaveBeenCalledWith(expect.objectContaining({
+    expect(mockResponse.json).toHaveBeenCalledWith({
       status: 'error',
       message: 'API Error'
-    }));
+    });
   });
 });
