@@ -28,61 +28,59 @@ export function validateCoinId(req, res, next) {
 
 /**
  * Validate coin price parameters
- * @param {express.Request} req - Express request object
- * @param {express.Response} res - Express response object
- * @param {express.NextFunction} next - Express next middleware function
+ * @returns {Array} Array of middleware functions
  */
-export function validateCoinPriceParams(req, res, next) {
-  // Default parameters in case req is undefined
-  const query = req?.query || {};
-  const { vs_currency, ids } = query;
+export function validateCoinPriceParams() {
+  return [
+    (req, res, next) => {
+      const { vs_currencies, ids } = req.query;
 
-  if (!vs_currency) {
-    return res.status(400).json({
-      error: 'Invalid Input',
-      message: 'vs_currency parameter is required'
-    });
-  }
+      if (!vs_currencies) {
+        return res.status(400).json({
+          error: 'Invalid Input',
+          message: 'vs_currencies parameter is required'
+        });
+      }
 
-  if (ids && typeof ids !== 'string') {
-    return res.status(400).json({
-      error: 'Invalid Input',
-      message: 'ids parameter must be a comma-separated string'
-    });
-  }
+      if (ids && !/^[a-z0-9-_,]+$/i.test(ids)) {
+        return res.status(400).json({
+          error: 'Invalid Input',
+          message: 'ids parameter contains invalid characters'
+        });
+      }
 
-  next();
+      next();
+    }
+  ];
 }
 
 /**
  * Validate coin list parameters
- * @param {express.Request} req - Express request object
- * @param {express.Response} res - Express response object
- * @param {express.NextFunction} next - Express next middleware function
+ * @returns {Array} Array of middleware functions
  */
-export function validateCoinListParams(req, res, next) {
-  // Default parameters in case req is undefined
-  const query = req?.query || {};
-  const { include_platform } = query;
+export function validateCoinListParams() {
+  return [
+    (req, res, next) => {
+      const { include_platform } = req.query;
 
-  if (include_platform && typeof include_platform !== 'string') {
-    return res.status(400).json({
-      error: 'Invalid Input',
-      message: 'include_platform must be a string'
-    });
-  }
+      if (include_platform && typeof include_platform !== 'string') {
+        return res.status(400).json({
+          error: 'Invalid Input',
+          message: 'include_platform must be a string'
+        });
+      }
 
-  next();
+      next();
+    }
+  ];
 }
 
 /**
  * Validate coin details parameters
- * @returns {Object} An object with parameter validation functions
+ * @returns {Array} Array of middleware functions
  */
 export function validateCoinDetailsParams() {
-  return {
-    validateCoinId
-  };
+  return [validateCoinId];
 }
 
 export default {
