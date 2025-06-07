@@ -73,7 +73,8 @@ export const logDebug = (message: string, meta?: any) => {
 export const handleError = (error: Error, context?: any) => {
   logger.error('Unhandled Error', {
     message: error.message,
-    context
+    context,
+    stack: error.stack
   });
   
   // Log to console as well
