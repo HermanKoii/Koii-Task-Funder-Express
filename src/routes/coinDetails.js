@@ -1,5 +1,6 @@
 import express from 'express';
 import NodeCache from 'node-cache';
+import CacheService from '../cache-service.js';
 
 // Mock coin data (in a real app, this would come from a database or service)
 const mockCoins = {
@@ -19,8 +20,11 @@ const mockCoins = {
   }
 };
 
-// Create a cache instance
-const coinCache = new NodeCache({ stdTTL: 600 }); // 10 minutes cache
+// Create a cache instance using the centralized CacheService
+const coinCache = CacheService.getInstance({
+  stdTTL: 600, // 10 minutes cache
+  maxKeys: 100  // Limit cache size
+});
 
 /**
  * Validate coin ID input
