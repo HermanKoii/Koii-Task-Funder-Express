@@ -1,5 +1,5 @@
-import express from 'express';
-import request from 'supertest';
+import * as express from 'express';
+import * as request from 'supertest';
 import { errorHandler, asyncHandler } from '../src/middleware/errorHandler';
 import { ApiError, ValidationError, NotFoundError, InternalServerError } from '../src/types/error';
 import { Request, Response, NextFunction } from 'express';
