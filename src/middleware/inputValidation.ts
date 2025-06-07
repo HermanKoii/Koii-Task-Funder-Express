@@ -32,7 +32,7 @@ export const validateCoinPriceParams = () => [
       });
     }
 
-    next();
+    return next(); // Explicit return
   }
 ];
 
@@ -52,7 +52,7 @@ export const validateCoinListParams = () => [
       });
     }
 
-    next(); // Always call next
+    return next(); // Explicit return
   }
 ];
 
@@ -73,6 +73,6 @@ export const validateCoinDetailsParams = () => [
       });
     }
 
-    next(); // Always call next
+    return next(); // Explicit return
   }
 ];
