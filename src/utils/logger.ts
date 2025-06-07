@@ -81,4 +81,18 @@ export const handleError = (error: Error, context?: any) => {
   console.error('Unhandled Error:', error.message, context);
 };
 
+// Performance logging utility
+export const measurePerformance = (label: string, fn: () => any) => {
+  const start = performance.now();
+  const result = fn();
+  const end = performance.now();
+  
+  logInfo(`Performance: ${label}`, {
+    duration: end - start,
+    timestamp: new Date().toISOString()
+  });
+  
+  return result;
+};
+
 export { logger as default };
